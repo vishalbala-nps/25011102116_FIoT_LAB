@@ -1,0 +1,42 @@
+# ===== Keil uVision (C51 / MDK) =====
+
+# Build output folders (keep only the flashable .hex from Objects/)
+**/Objects/*
+!**/Objects/*.hex
+Listings/
+Output/
+DebugConfig/
+**/RTE/_*/
+
+# Per-user GUI layout and debug session state (uVision 4 and 5)
+*.uvgui.*
+*.uvguix.*
+*.uvopt
+*.uvoptx
+
+# Build artifacts (in case output is not in Objects/Listings)
+*.obj
+*.o
+*.lst
+*.m51
+*.map
+*.lnp
+*.axf
+*.elf
+*.bin
+*.htm
+*.dep
+*.d
+*.crf
+*.__i
+*._ia
+*.i
+*.bak
+*.plg
+*.sbr
+*.tra
+JLinkLog.txt
+
+# ===== OS =====
+.DS_Store
+*pdf
