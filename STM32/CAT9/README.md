@@ -43,7 +43,7 @@ USART2 is configured in CubeMX for asynchronous mode at a standard serial settin
 
 **Code Base:**
 
-- **Project folder:** [`TASK_9A_Basic_UART_Communication`](TASK_9A_Basic_UART_Communication/)
+- **Project folder:** [`TASK9A`](TASK9A/)
 - `HAL_UART_Init()` (called from `MX_USART2_UART_Init()`) initializes USART2 with 115200-8-N-1.
 - `HAL_UART_Receive(&huart2, &ch, 1, 1000)` waits up to 1 s for one character.
 - `HAL_UART_Transmit(&huart2, &ch, 1, HAL_MAX_DELAY)` sends the received character back (echo).
@@ -95,7 +95,7 @@ The received characters are collected into a buffer to form a command string. Wh
 
 **Code Base:**
 
-- **Project folder:** [`TASK_9B_String_Based_Application_Logic`](TASK_9B_String_Based_Application_Logic/)
+- **Project folder:** [`TASK9B`](TASK9B/)
 - `buf[128]` stores the command and `lastInd` tracks its length.
 - `strcmp()` compares the received command with each known command.
 - `HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET / GPIO_PIN_SET)` turns the LED ON / OFF.

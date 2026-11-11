@@ -48,7 +48,7 @@ Both UARTs are configured at **115200 baud, 8-N-1**, the default rate of the ESP
 
 **Code Base:**
 
-- **Project folder:** [`TASK_9A_Establish_STM32_Wemos_UART_Communication`](TASK_9A_Establish_STM32_Wemos_UART_Communication/)
+- **Project folder:** [`TASK10A`](TASK10A/)
 - `sendUART()` transmits a string followed by `\r\n` using `HAL_UART_Transmit()`.
 - `recieveUART()` reads characters with `HAL_UART_Receive()` until a complete line ends with CR or LF.
 - `sendATCommand()` sends one AT command and collects every response line until `OK` (returns 1) or `ERROR`/`FAIL` (returns 0).
@@ -112,7 +112,7 @@ The STM32 sends the commands for the first four requirements to the Wemos one af
 
 **Code Base:**
 
-- **Project folder:** [`TASK_9B_Explore_ESP8266_AT_Command_Interface`](TASK_9B_Explore_ESP8266_AT_Command_Interface/)
+- **Project folder:** [`TASK10B`](TASK10B/)
 - `showATCommand(cmd)` prints the command, sends it with `sendATCommand()` and prints the collected response.
 - `sendATCommand(huart, cmd, output, size)` implements the request–response loop and is used for every command.
 - The response is collected into the buffer `atResponse[1024]` first and printed afterwards, so no characters from the Wemos are missed while the PC terminal is being written.
@@ -174,7 +174,7 @@ The STM32 configures the ESP8266 as a Wi-Fi station, joins the access point and 
 
 **Code Base:**
 
-- **Project folder:** [`TASK_9C_Connect_Wemos_to_WiFi`](TASK_9C_Connect_Wemos_to_WiFi/)
+- **Project folder:** [`TASK10C`](TASK10C/)
 - `initWifi()` performs the boot delay, `__HAL_UART_CLEAR_OREFLAG()`, `ATE0` and `AT`.
 - `joinAP()` builds and sends the `AT+CWJAP` command.
 - `getIP()` and `getMAC()` send `AT+CIFSR`, locate the `STAIP` / `STAMAC` tag with `strstr()` and copy the quoted value.

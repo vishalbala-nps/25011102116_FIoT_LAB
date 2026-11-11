@@ -41,7 +41,7 @@ PC13 is configured as a push-pull output for the onboard LED and PA15 as an inpu
 
 **Code Base:**
 
-- **Project folder:** [`TASK_8A_GPIO_Input_Output`](TASK_8A_GPIO_Input_Output/)
+- **Project folder:** [`TASK8A`](TASK8A/)
 - `HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15)` reads the button.
 - `HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET / GPIO_PIN_SET)` turns the LED ON / OFF (active-low).
 
@@ -83,7 +83,7 @@ PA15 is configured as a digital input with the internal pull-up enabled, so it r
 
 **Code Base:**
 
-- **Project folder:** [`TASK_8B_Event_Based_Control`](TASK_8B_Event_Based_Control/)
+- **Project folder:** [`TASK8B`](TASK8B/)
 - `HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15)` reads the button.
 - `HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13)` toggles the LED.
 - `HAL_GetTick()` provides the millisecond time stamps for the press and release edges.
@@ -137,7 +137,7 @@ The press is classified by how long the button is held, measured without any blo
 
 **Code Base:**
 
-- **Project folder:** [`TASK_8C_Short_Press_vs_Long_Press`](TASK_8C_Short_Press_vs_Long_Press/)
+- **Project folder:** [`TASK8C`](TASK8C/)
 - `HAL_GetTick()` is used for both press timing and the blink interval; `HAL_Delay()` is not used.
 - `blink` holds the blinking mode, `press_t` the press start time and `blink_t` the last blink toggle time.
 - `HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13)` is used for both the short-press toggle and the blinking.
