@@ -15,7 +15,7 @@
 ### 1. Circuit Diagram
 
 - **Microcontroller:** AT89S52 (8051 core) on the AT89S52 development kit
-- **LCD Pins:** RS → P3.2, E → P3.3, D4–D7 → P3.4–P3.7 (4-bit mode)
+- **LCD Pins:** LCD plugged into the DS1 header – RS → P3.2 (D8), E → P3.3 (D7), D4–D7 → P3.4–P3.7 (D5–D2), RW → GND (4-bit mode)
 - **Peripheral:** Built-in 16×2 character LCD (HD44780-compatible)
 - **Power Supply:** 5V DC
 
@@ -51,7 +51,7 @@ The character `A` and the two strings appear on both rows of the LCD. The comman
 ### 1. Circuit Diagram
 
 - **Microcontroller:** AT89S52 (8051 core) on the AT89S52 development kit
-- **LCD Pins:** RS → P3.2, E → P3.3, D4–D7 → P3.4–P3.7 (4-bit mode)
+- **LCD Pins:** LCD plugged into the DS1 header – RS → P3.2 (D8), E → P3.3 (D7), D4–D7 → P3.4–P3.7 (D5–D2), RW → GND (4-bit mode)
 - **Peripheral:** Built-in 16×2 character LCD (HD44780-compatible)
 - **Power Supply:** 5V DC
 
@@ -87,7 +87,7 @@ The cursor can be placed at any row and column, and the number on row 2 updates 
 ### 1. Circuit Diagram
 
 - **Microcontroller:** AT89S52 (8051 core) on the AT89S52 development kit
-- **LCD Pins:** RS → P3.2, E → P3.3, D4–D7 → P3.4–P3.7 (4-bit mode)
+- **LCD Pins:** LCD plugged into the DS1 header – RS → P3.2 (D8), E → P3.3 (D7), D4–D7 → P3.4–P3.7 (D5–D2), RW → GND (4-bit mode)
 - **Keypad Pins:** Built-in 4×4 matrix keypad on Port 2 – rows P2.7–P2.4, columns P2.3–P2.0
 - **Peripherals:** Built-in 16×2 character LCD, built-in 4×4 matrix keypad
 - **Power Supply:** 5V DC
