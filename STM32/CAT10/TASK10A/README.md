@@ -1,6 +1,6 @@
-# TASK 9A Establish STM32 ↔ Wemos UART Communication
+# TASK 10A Establish STM32 ↔ Wemos UART Communication
 
-**Experiment:** [CONTINUOUS ASSESSMENT 10 – STM32–Wemos Wi-Fi Modem Interface Using AT Commands](../README.md)
+**Experiment:** [CONTINUOUS ASSESSMENT 10 – STM32–Wemos Wi-Fi Modem Interface Using AT Commands and HTTP Server](../README.md)
 
 ---
 

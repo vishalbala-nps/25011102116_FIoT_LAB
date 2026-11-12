@@ -23,13 +23,12 @@ Each experiment folder (`CATn`) has a **README.md** index with the experiment de
 
 | # | Experiment | Board | Key concepts | Project |
 |---|---|---|---|---|
-| [Cat 8](STM32/CAT8/) | GPIO bring-up and switch-controlled LED (short vs long press) | Blue Pill (STM32F103C6) | GPIO input/output, pull-ups, `HAL_GetTick()` timing, debouncing | [`STMButtonLED`](STM32/CAT8/) |
-| [Cat 9](STM32/CAT9/) | UART command-controlled LED | Blue Pill (STM32F103C6) | USART with HAL, echo, line-based command parsing, CR/LF | [`STMUartLED`](STM32/CAT9/) |
-| [Cat 10](STM32/CAT10/) | STM32–Wemos (ESP8266) Wi-Fi modem interface | Blue Pill (STM32F103C8) | Two UARTs, ESP8266 AT commands, joining Wi-Fi, IP/MAC lookup | [`WemosWifi`](STM32/CAT10/) |
-| [Cat 10C](STM32/CAT10C/) | HTTP server – STM32–Wemos Wi-Fi modem using AT commands | Blue Pill (STM32F103C8) | ESP8266 TCP server, `+IPD` requests, static HTTP response, Node-RED client | [`TASK10C`, `TASK10D`, `TASK10E`](STM32/CAT10C/) |
-| [Cat 11](STM32/CAT11/) | Cortex-M4 GPIO and user input | NUCLEO-F401RE | F4 clock tree (HSE bypass, PLL), on-board LED/button, short/long press | [`Ex5`](STM32/CAT11/) |
-| [Cat 12](STM32/CAT12/) | BME280 over I²C with the Bosch API, served over HTTP | NUCLEO-F401RE | I²C, Bosch Sensor API, ESP8266 TCP server, HTTP responses, UART interrupts | [`BME280Nucleo`](STM32/CAT12/) |
-| [Cat 13](STM32/CAT13/) | MQTT publishing of BME280 data | NUCLEO-F401RE | MQTT CONNECT/PUBLISH packets, public broker, JSON payload | [`NucleoMQTT`](STM32/CAT13/) |
+| [Cat 8](STM32/CAT8/) | GPIO bring-up and switch-controlled LED (short vs long press) | Blue Pill (STM32F103C6) | GPIO input/output, pull-ups, `HAL_GetTick()` timing, debouncing | [`TASK8A`](STM32/CAT8/TASK8A/), [`TASK8B`](STM32/CAT8/TASK8B/), [`TASK8C`](STM32/CAT8/TASK8C/) |
+| [Cat 9](STM32/CAT9/) | UART command-controlled LED | Blue Pill (STM32F103C6) | USART with HAL, echo, line-based command parsing, CR/LF | [`TASK9A`](STM32/CAT9/TASK9A/), [`TASK9B`](STM32/CAT9/TASK9B/) |
+| [Cat 10](STM32/CAT10/) | STM32–Wemos (ESP8266) Wi-Fi modem interface and HTTP server | Blue Pill (STM32F103C8) | Two UARTs, ESP8266 AT commands, joining Wi-Fi, TCP server, `+IPD` requests, static HTTP response, Node-RED client | [`TASK10A`](STM32/CAT10/TASK10A/), [`TASK10B`](STM32/CAT10/TASK10B/), [`TASK10C`](STM32/CAT10/TASK10C/), [`TASK10D`](STM32/CAT10/TASK10D/), [`TASK10E`](STM32/CAT10/TASK10E/) |
+| [Cat 11](STM32/CAT11/) | Cortex-M4 GPIO and user input | NUCLEO-F401RE | F4 clock tree (HSE bypass, PLL), on-board LED/button, short/long press | [`TASK11A`](STM32/CAT11/TASK11A/), [`TASK11B`](STM32/CAT11/TASK11B/), [`TASK11C`](STM32/CAT11/TASK11C/) |
+| [Cat 12](STM32/CAT12/) | BME280 over I²C with the Bosch API, served over HTTP | NUCLEO-F401RE | I²C, Bosch Sensor API, UART output, JSON HTTP response, Node-RED statistics | [`TASK12A`](STM32/CAT12/TASK12A/), [`TASK12B`](STM32/CAT12/TASK12B/), [`TASK12C`](STM32/CAT12/TASK12C/) |
+| [Cat 13](STM32/CAT13/) | MQTT publishing of BME280 data | NUCLEO-F401RE | MQTT CONNECT/PUBLISH packets, public broker, JSON payload | [`TASK13`](STM32/CAT13/TASK13/) |
 
 ## Hardware
 

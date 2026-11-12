@@ -4,17 +4,17 @@
 
 **DATE:** DD/MM/YYYY
 
-**NAME OF EXP:** STM32–Wemos Wi-Fi Modem Interface Using AT Commands
+**NAME OF EXP:** STM32–Wemos Wi-Fi Modem Interface Using AT Commands and HTTP Server
 
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Development Board Blue Pill STM32F103C8T6 + Wemos D1 Mini (ESP8266) Wi-Fi Module + USB-to-TTL Serial Converter + PuTTY
+**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Development Board Blue Pill STM32F103C8T6 + Wemos D1 Mini (ESP8266) Wi-Fi Module + USB-to-TTL Serial Converter + PuTTY + Browser / Node-RED
 
 ---
 
 ## Overview
 
-Interface the STM32 with a Wemos D1 Mini (ESP8266) through UART and configure the Wi-Fi modem using AT commands. One UART carries the AT commands to the Wemos and a second UART shows the results on the PC terminal.
+Interface the STM32 with a Wemos D1 Mini (ESP8266) through UART and configure the Wi-Fi modem using AT commands, then turn it into an HTTP sensor node: the STM32 configures the ESP8266 as a TCP server, receives an HTTP request through an `+IPD` frame, constructs an HTTP response and transmits it to a browser and to Node-RED. One UART carries the AT commands to the Wemos and a second UART shows the results on the PC terminal.
 
-**Expected outcome:** The STM32 communicates with the ESP8266, explores its AT command set, and connects it to the Wi-Fi network, reporting the IP and MAC address on the PC terminal.
+**Expected outcome:** The STM32 communicates with the ESP8266, explores its AT command set, connects it to Wi-Fi and runs a TCP server whose static "STM32 IoT Node" page is received by a browser and by Node-RED.
 
 ## Circuit Diagram
 
@@ -36,8 +36,10 @@ Interface the STM32 with a Wemos D1 Mini (ESP8266) through UART and configure th
 
 | Task | What it does | Outcome |
 |---|---|---|
-| [TASK 9A Establish STM32 ↔ Wemos UART Communication](TASK10A/) | Sends `AT` to the Wemos and shows `>> AT` / `<< OK` on the PC terminal | STM32 ↔ Wemos UART link proven |
-| [TASK 9B Explore the ESP8266 AT Command Interface](TASK10B/) | Sends `AT`, `AT+GMR`, `AT+CWMODE=1`, `AT+CWLAP` and displays each response | AT command interface explored |
-| [TASK 9C Connect Wemos to Wi-Fi](TASK10C/) | Sets station mode, joins the Wi-Fi network and reads the IP / MAC with `AT+CIFSR` | Wemos connected to Wi-Fi; IP and MAC reported |
+| [TASK 10A Establish STM32 ↔ Wemos UART Communication](TASK10A/) | Sends `AT` to the Wemos and shows `>> AT` / `<< OK` on the PC terminal | STM32 ↔ Wemos UART link proven |
+| [TASK 10B Explore the ESP8266 AT Command Interface](TASK10B/) | Sends `AT`, `AT+GMR`, `AT+CWMODE=1`, `AT+CWLAP` and displays each response | AT command interface explored |
+| [TASK 10C Connect Wemos to Wi-Fi and Configure ESP8266 as a TCP Server](TASK10C/) | Joins Wi-Fi, prints the IP / MAC, then sends `AT`, `AT+CIPMUX=1`, `AT+CIPSERVER=1,80` | TCP server listening on port 80 |
+| [TASK 10D Observe the HTTP Request and Construct a Static HTTP Response](TASK10D/) | Prints the `+IPD` request and answers `GET /` with a static HTML page using a two-step `AT+CIPSEND` | Browser shows the STM32 IoT Node page |
+| [TASK 10E Node-RED as a Second HTTP Client](TASK10E/) | Node-RED Inject → HTTP Request → Debug flow queries the STM32 server | Node-RED receives the same HTTP response |
 
 Each task folder contains its STM32CubeMX / STM32CubeIDE project and a README with the task's hardware, core logic, pseudocode, code base and inference.

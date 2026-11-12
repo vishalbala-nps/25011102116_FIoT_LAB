@@ -18,7 +18,7 @@ Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 **Working Principle:**
 
-PC13 is configured as a push-pull output for the onboard LED and PA15 as an input with the internal pull-up enabled, so the button reads HIGH when released and LOW when pressed. PA15 is normally a JTAG pin, so the debug interface is set to Serial Wire only to free it. The program continuously copies the switch state to the LED, so the LED follows the switch.
+PC13 is configured as a push-pull output for the onboard LED and PA15 as an input with the internal pull-up enabled, so the button reads HIGH when released and LOW when pressed. The program continuously copies the switch state to the LED, so the LED follows the switch.
 
 **Pseudocode:**
 

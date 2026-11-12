@@ -1,4 +1,4 @@
-# TASK 2 On-board Switch Control with State Remembrance
+# TASK 11B On-board Switch Control with State Remembrance
 
 **Experiment:** [CONTINUOUS ASSESSMENT 11 – STM32F401RE Cortex-M4: GPIO and User Input Programming](../README.md)
 

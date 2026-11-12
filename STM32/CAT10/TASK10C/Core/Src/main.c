@@ -18,10 +18,10 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include <string.h>
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,14 +58,6 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
-
 // UART Related
 void sendUART(UART_HandleTypeDef *huart, char inp[]) {
     HAL_UART_Transmit(huart, (uint8_t *)inp, strlen(inp), HAL_MAX_DELAY);
@@ -89,11 +81,10 @@ void recieveUART(UART_HandleTypeDef *huart, char* buf,int size) {
 	}
 }
 
-// Wifi Related
 int sendATCommand(UART_HandleTypeDef *huart, char atCMD[],char *output,int outputSize) {
 	output[0] = '\0';
 	sendUART(huart, atCMD);
-	char recBuf[64];
+	char recBuf[512];
 	while (1) {
 		recieveUART(huart, recBuf, 64);
 		strncat(output,recBuf, outputSize - strlen(output) - 1);
@@ -106,6 +97,7 @@ int sendATCommand(UART_HandleTypeDef *huart, char atCMD[],char *output,int outpu
 	}
 }
 
+// Wifi Related
 int initWifi(UART_HandleTypeDef *huart) {
 	HAL_Delay(2000);
 	__HAL_UART_CLEAR_OREFLAG(huart);
@@ -183,42 +175,101 @@ int getIP(UART_HandleTypeDef *huart, char* ipBuf,int ipBufSize) {
 	return ret;
 }
 
+// Send an AT command to the Wemos and show the exchange on the PC terminal
+char atResponse[1024];
+int showATCommand(char atCMD[]) {
+	char line[128];
+	snprintf(line, sizeof(line), ">> %s", atCMD);
+	sendUART(&huart2, line);
+	int ret = sendATCommand(&huart1, atCMD, atResponse, sizeof(atResponse));
+	char *start = atResponse;
+	char *end;
+	while ((end = strstr(start, "\r\n")) != NULL) {
+		*end = '\0';
+		snprintf(line, sizeof(line), "<< %.120s", start);
+		sendUART(&huart2, line);
+		start = end + 2;
+	}
+	return ret;
+}
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
 int main(void)
 {
-  // Init STM32
+
+  /* USER CODE BEGIN 1 */
+
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
   SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
+  /* USER CODE BEGIN 2 */
+  char buf[128];
+  char addr[64];
+  int ret;
 
-
-  //Code Begins
-  char buf[32];
+  // Connect the Wemos to the Wi-Fi network (station mode)
   sendUART(&huart2, "Initializing Wifi...");
   initWifi(&huart1);
   sendUART(&huart2, "Initialized Wifi");
   setMode(&huart1, "STATION", buf, sizeof(buf));
 
   sendUART(&huart2, "Connecting to Wifi...");
-  int ret = joinAP(&huart1, "SNUC", "snu12345", buf, sizeof(buf));
+  ret = joinAP(&huart1, "SNUC", "snu12345", buf, sizeof(buf));
   if (ret) {
 	  sendUART(&huart2, "Connected to Wifi Successfully");
-	  getIP(&huart1,buf,sizeof(buf));
-	  char toRet[64] = "IP Address: ";
-	  strcat(toRet,buf);
-	  sendUART(&huart2, toRet);
+	  getIP(&huart1, addr, sizeof(addr));
+	  snprintf(buf, sizeof(buf), "IP Address: %s", addr);
+	  sendUART(&huart2, buf);
+	  getMAC(&huart1, addr, sizeof(addr));
+	  snprintf(buf, sizeof(buf), "MAC Address: %s", addr);
+	  sendUART(&huart2, buf);
 
-	  getMAC(&huart1,buf,sizeof(buf));
-	  toRet[0] = '\0';
-	  strcpy(toRet,"MAC Address: ");
-	  strcat(toRet,buf);
-	  sendUART(&huart2, toRet);
+	  // Configure the ESP8266 as a TCP server
+	  showATCommand("AT");
+	  showATCommand("AT+CIPMUX=1");
+	  if (showATCommand("AT+CIPSERVER=1,80")) {
+		  sendUART(&huart2, "TCP server started on port 80");
+	  } else {
+		  sendUART(&huart2, "Failed to start TCP server");
+	  }
   } else {
 	  sendUART(&huart2, "Failed to connect to wifi");
   }
-}
+  /* USER CODE END 2 */
 
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}
 
 /**
   * @brief System Clock Configuration

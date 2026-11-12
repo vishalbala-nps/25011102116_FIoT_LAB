@@ -18,7 +18,7 @@ Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 **Working Principle:**
 
-PA15 is configured as a digital input with the internal pull-up enabled, so it reads HIGH when the button is released and LOW when it is pressed. PA15 is normally a JTAG pin, so the debug interface is set to Serial Wire only to free it. The program detects the press and release edges of the button and toggles the PC13 LED once per valid press. Switch bounce is handled in software: a press must last at least 30 ms before it is accepted, so the short pulses caused by contact bounce are ignored.
+PA15 is configured as a digital input with the internal pull-up enabled, so it reads HIGH when the button is released and LOW when it is pressed. The program detects the press and release edges of the button and toggles the PC13 LED once per valid press. Switch bounce is handled in software: a press must last at least 30 ms before it is accepted, so the short pulses caused by contact bounce are ignored.
 
 **Pseudocode:**
 

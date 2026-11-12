@@ -1,6 +1,6 @@
-# TASK 9B Explore the ESP8266 AT Command Interface
+# TASK 10B Explore the ESP8266 AT Command Interface
 
-**Experiment:** [CONTINUOUS ASSESSMENT 10 – STM32–Wemos Wi-Fi Modem Interface Using AT Commands](../README.md)
+**Experiment:** [CONTINUOUS ASSESSMENT 10 – STM32–Wemos Wi-Fi Modem Interface Using AT Commands and HTTP Server](../README.md)
 
 ---
 
@@ -31,11 +31,11 @@ Every AT command is a text line ending in CR/LF, and every reply ends with a sta
 | Establish TCP connection | `AT+CIPSTART="TCP","<host>",<port>` |
 | Send application data | `AT+CIPSEND=<length>` |
 
-The STM32 sends the commands for the first four requirements to the Wemos one after another and displays each command and its response on the PC terminal. Joining an AP and reading the network information are carried out in Task 9C.
+The STM32 sends the commands for the first four requirements to the Wemos one after another and displays each command and its response on the PC terminal. Joining an AP and reading the network information are carried out in Task 10C.
 
 **Pseudocode:**
 
-1. Initialize the Wemos as in Task 9A (boot delay, `ATE0`).
+1. Initialize the Wemos as in Task 10A (boot delay, `ATE0`).
 2. For each command `AT`, `AT+GMR`, `AT+CWMODE=1` and `AT+CWLAP`:
    - print `>> <command>` on the PC terminal;
    - send the command to the Wemos followed by CR/LF;

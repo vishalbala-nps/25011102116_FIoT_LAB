@@ -30,8 +30,8 @@ Bring up the NUCLEO-F401RE (Cortex-M4) and program its GPIO with CubeMX and the 
 
 | Task | What it does | Outcome |
 |---|---|---|
-| [TASK 1 On-board LED Bring-Up](TASK11A/) | Blinks LD2 at a fixed 500 ms interval | Board, clock and GPIO output verified |
-| [TASK 2 On-board Switch Control with State Remembrance](TASK11B/) | Each valid B1 press toggles LD2; the LED keeps its state after release | Button control with state remembrance |
-| [TASK 3 Short-Press and Long-Press Detection](TASK11C/) | Short press toggles LD2; long press (≥ 500 ms) starts / stops blinking | Short and long presses distinguished |
+| [TASK 11A On-board LED Bring-Up](TASK11A/) | Blinks LD2 at a fixed 500 ms interval | Board, clock and GPIO output verified |
+| [TASK 11B On-board Switch Control with State Remembrance](TASK11B/) | Each valid B1 press toggles LD2; the LED keeps its state after release | Button control with state remembrance |
+| [TASK 11C Short-Press and Long-Press Detection](TASK11C/) | Short press toggles LD2; long press (≥ 500 ms) starts / stops blinking | Short and long presses distinguished |
 
 Each task folder contains its STM32CubeMX / STM32CubeIDE project and a README with the task's hardware, core logic, pseudocode, code base and inference.

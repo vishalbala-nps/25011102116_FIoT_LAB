@@ -1,4 +1,4 @@
-# TASK 3 Short-Press and Long-Press Detection
+# TASK 11C Short-Press and Long-Press Detection
 
 **Experiment:** [CONTINUOUS ASSESSMENT 11 – STM32F401RE Cortex-M4: GPIO and User Input Programming](../README.md)
 
