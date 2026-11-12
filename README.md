@@ -29,16 +29,18 @@ Each experiment folder (`CATn`) has a **README.md** index with the experiment de
 | [Cat 11](STM32/CAT11/) | Cortex-M4 GPIO and user input | NUCLEO-F401RE | F4 clock tree (HSE bypass, PLL), on-board LED/button, short/long press | [`TASK11A`](STM32/CAT11/TASK11A/), [`TASK11B`](STM32/CAT11/TASK11B/), [`TASK11C`](STM32/CAT11/TASK11C/) |
 | [Cat 12](STM32/CAT12/) | BME280 over I²C with the Bosch API, served over HTTP | NUCLEO-F401RE | I²C, Bosch Sensor API, UART output, JSON HTTP response, Node-RED statistics | [`TASK12A`](STM32/CAT12/TASK12A/), [`TASK12B`](STM32/CAT12/TASK12B/), [`TASK12C`](STM32/CAT12/TASK12C/) |
 | [Cat 13](STM32/CAT13/) | MQTT publishing of BME280 data | NUCLEO-F401RE | MQTT CONNECT/PUBLISH packets, public broker, JSON payload | [`TASK13`](STM32/CAT13/TASK13/) |
+| [Cat 14](STM32/CAT14/) | IoT project: server rack monitor | Blue Pill (STM32F103C6) | DHT11 single-wire timing, MQTT publishing, local LED/buzzer alarm, Node-RED dashboard, alert hysteresis, automatic shutdown, OpenWeatherMap | [`TASK14`](STM32/CAT14/TASK14/) |
 
 ## Hardware
 
 | Hardware | Used in | Notes |
 |---|---|---|
 | AT89S52 development kit | Cat 2 – Cat 7 | 11.0952 MHz crystal; on-board LED (P1.0, active-low), matrix keypad, seven-segment display and 16×2 LCD; programmed over ISP |
-| STM32 "Blue Pill" (STM32F103C6 / C8) | Cat 8 – Cat 10 | 8 MHz crystal, 72 MHz system clock; on-board LED on PC13 (active-low); programmed with an ST-Link over SWD |
+| STM32 "Blue Pill" (STM32F103C6 / C8) | Cat 8 – Cat 10, Cat 14 | 8 MHz crystal, 72 MHz system clock; on-board LED on PC13 (active-low); programmed with an ST-Link over SWD |
 | NUCLEO-F401RE (STM32F401RE) | Cat 11 – Cat 13 | 8 MHz from the on-board ST-LINK (HSE bypass), 84 MHz system clock; LD2 on PA5, B1 on PC13 |
-| Wemos D1 Mini (ESP8266) | Cat 10, Cat 12, Cat 13 | Wi-Fi modem running Espressif AT-command firmware, 115200 baud |
+| Wemos D1 Mini (ESP8266) | Cat 10, Cat 12 – Cat 14 | Wi-Fi modem running Espressif AT-command firmware, 115200 baud |
 | Bosch BME280 module | Cat 12, Cat 13 | Temperature, pressure and humidity sensor on I²C (address 0x76) |
+| DHT11 module, LED, buzzer | Cat 14 | Rack temperature/humidity sensor (single-wire) and local alarm |
 | USB-to-TTL serial converter | Cat 6, Cat 9 – Cat 12 | PC terminal (PuTTY) |
 
 ## Tools
@@ -51,6 +53,8 @@ Each experiment folder (`CATn`) has a **README.md** index with the experiment de
 | **STM32CubeIDE** | STM32 projects (`.project`, `.cproject`), alternative to Keil MDK-ARM |
 | STM32Cube HAL (FW_F1, FW_F4) | STM32 peripheral drivers (in each project's `Drivers/` folder) |
 | Bosch Sensortec BME280 Sensor API v3.5.1 | BME280 driver (Cat 12, Cat 13) |
+| Node-RED + Node-RED Dashboard 2.0 | MQTT dashboards and flows (Cat 10, Cat 12 – Cat 14) |
+| OpenWeatherMap API | Outside weather in the Cat 14 dashboard |
 | PuTTY | Serial terminal |
 
 ## Repository Layout

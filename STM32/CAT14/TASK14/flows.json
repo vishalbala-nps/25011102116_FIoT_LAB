@@ -1,0 +1,1026 @@
+[
+    {
+        "id": "192b09c1d46de512",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": [
+            {
+                "name": "OWM_KEY",
+                "value": "YOUR_OPENWEATHERMAP_API_KEY",
+                "type": "str"
+            },
+            {
+                "name": "LAT",
+                "value": "YOUR_LATITUDE",
+                "type": "str"
+            },
+            {
+                "name": "LON",
+                "value": "YOUR_LONGITUDE",
+                "type": "str"
+            },
+            {
+                "name": "HOT_DAY",
+                "value": "34",
+                "type": "num"
+            }
+        ]
+    },
+    {
+        "id": "7494b37586977608",
+        "type": "mqtt in",
+        "z": "192b09c1d46de512",
+        "name": "FromBroker",
+        "topic": "rack1/readings",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "c04f3cd03e3b81e6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 200,
+        "wires": [
+            [
+                "35b3a3bb611f88da",
+                "b18faea133569542",
+                "5f5baf04ef9768d1",
+                "159d1b7848884212",
+                "c8f9413b4bb16102",
+                "267b50a3613728ab"
+            ]
+        ]
+    },
+    {
+        "id": "28734ab64b070210",
+        "type": "debug",
+        "z": "192b09c1d46de512",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "debugMessage",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "68fc36ec97985fd7",
+        "type": "ui-chart",
+        "z": "192b09c1d46de512",
+        "group": "76f5011f81d2474b",
+        "name": "Temperature",
+        "label": "Temperature",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload.t",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 12,
+        "height": 6,
+        "className": "",
+        "interpolation": "linear",
+        "x": 410,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "35b3a3bb611f88da",
+        "type": "function",
+        "z": "192b09c1d46de512",
+        "name": "function 1",
+        "func": "let str = \"Temperature: \"+msg.payload.t;\nstr += \"\\nHumidity: \" + msg.payload.h;\nreturn {debugMessage: str,timestamp: new Date().toLocaleString(\"en-US\", {\n  timeZone: \"Asia/Kolkata\"\n})};",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 120,
+        "wires": [
+            [
+                "28734ab64b070210",
+                "7a679c71cfd0260f"
+            ]
+        ]
+    },
+    {
+        "id": "7a679c71cfd0260f",
+        "type": "ui-text",
+        "z": "192b09c1d46de512",
+        "group": "cb4649e7f4580cc6",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Last Updated",
+        "label": "Last Updated",
+        "format": "{{msg.payload}}",
+        "layout": "row-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "timestamp",
+        "valueType": "msg",
+        "x": 640,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "2dfe1416493de42c",
+        "type": "ui-template",
+        "z": "192b09c1d46de512",
+        "group": "cb4649e7f4580cc6",
+        "page": "",
+        "ui": "",
+        "name": "",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "head": "",
+        "format": "<template>\n  <div v-if=\"msg?.payload?.ok === undefined\" class=\"rack-status rack-waiting\">\n    <span class=\"rack-status-icon\">…</span>\n    <div>\n      <div class=\"rack-status-title\">Waiting for data</div>\n      <div class=\"rack-status-text\">No status received yet.</div>\n    </div>\n  </div>\n\n  <div v-else-if=\"msg.payload.ok\" class=\"rack-status rack-ok\">\n    <span class=\"rack-status-icon\">✓</span>\n    <div>\n      <div class=\"rack-status-title\">Everything is fine</div>\n      <div class=\"rack-status-text\">Temperature is within the safe range.</div>\n    </div>\n  </div>\n\n  <div v-else class=\"rack-status rack-alert\">\n    <span class=\"rack-status-icon\">⚠</span>\n    <div>\n      <div class=\"rack-status-title\">Temperature high</div>\n      <div class=\"rack-status-text\">Action needed: check the cooling and airflow.</div>\n    </div>\n  </div>\n</template>\n\n<style>\n.rack-status {\n  display: flex;\n  align-items: center;\n  gap: 16px;\n  padding: 16px 20px;\n  border-radius: 10px;\n  color: white;\n}\n.rack-ok { background: #2b8a3e; }\n.rack-alert { background: #c92a2a; }\n.rack-waiting { background: #5c6670; }\n.rack-status-icon {\n  font-size: 32px;\n  font-weight: 700;\n  line-height: 1;\n}\n.rack-status-title {\n  font-size: 20px;\n  font-weight: 700;\n}\n.rack-status-text { font-size: 14px; }\n</style>",
+        "noerr": 0,
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 780,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "91a4073e0ab95e88",
+        "type": "ui-audio",
+        "z": "192b09c1d46de512",
+        "group": "",
+        "ui": "c17d0393d0d1e62f",
+        "name": "",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "mode": "tts",
+        "voice": "",
+        "src": "",
+        "autoplay": "off",
+        "loop": "off",
+        "muted": "off",
+        "className": "",
+        "x": 980,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "71af69c29869028a",
+        "type": "function",
+        "z": "192b09c1d46de512",
+        "name": "function 3",
+        "func": "return {payload: \"Temperature too high\"};\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 520,
+        "wires": [
+            [
+                "91a4073e0ab95e88"
+            ]
+        ]
+    },
+    {
+        "id": "03fbbb48ab45bc47",
+        "type": "rbe",
+        "z": "192b09c1d46de512",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload.ok",
+        "topi": "topic",
+        "x": 530,
+        "y": 500,
+        "wires": [
+            [
+                "513e206667fc338e"
+            ]
+        ]
+    },
+    {
+        "id": "b18faea133569542",
+        "type": "function",
+        "z": "192b09c1d46de512",
+        "name": "function 2",
+        "func": "if (msg.payload.t >= 30) {\n    return {payload:{ok:false}};\n} else {\n    return {payload:{ok:true}};\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 420,
+        "wires": [
+            [
+                "2dfe1416493de42c",
+                "03fbbb48ab45bc47"
+            ]
+        ]
+    },
+    {
+        "id": "513e206667fc338e",
+        "type": "switch",
+        "z": "192b09c1d46de512",
+        "name": "",
+        "property": "payload.ok",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 650,
+        "y": 500,
+        "wires": [
+            [
+                "71af69c29869028a"
+            ]
+        ]
+    },
+    {
+        "id": "5f5baf04ef9768d1",
+        "type": "function",
+        "z": "192b09c1d46de512",
+        "name": "function 4",
+        "func": "const LIMIT = 30;      // High above this temperature\nconst CLEAR_AT = 29;   // Clear at or below this temperature\nconst REQUIRED = 3;    // Consecutive high readings needed\n\nconst temp = Number(msg.payload.t);\nif (Number.isNaN(temp)) return null;   // Ignore bad readings\n\nlet count = context.get(\"count\") || 0;\nlet alert = context.get(\"alert\") || false;\n\ncount = temp > LIMIT ? count + 1 : 0;\n\nif (count >= REQUIRED) {\n    alert = true;\n} else if (temp <= CLEAR_AT) {\n    alert = false;\n}\n\ncontext.set(\"count\", count);\ncontext.set(\"alert\", alert);\n\nnode.status({\n    fill: alert ? \"red\" : \"green\",\n    shape: \"dot\",\n    text: `${temp}°C, count: ${count}`\n});\n\nmsg.payload = alert;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 580,
+        "wires": [
+            [
+                "0f0c1640496f71e2"
+            ]
+        ]
+    },
+    {
+        "id": "0f0c1640496f71e2",
+        "type": "rbe",
+        "z": "192b09c1d46de512",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 590,
+        "y": 580,
+        "wires": [
+            [
+                "2fe80a02206b7d95",
+                "4214d86305b0207e"
+            ]
+        ]
+    },
+    {
+        "id": "2fe80a02206b7d95",
+        "type": "switch",
+        "z": "192b09c1d46de512",
+        "name": "Alert on?",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 730,
+        "y": 580,
+        "wires": [
+            [
+                "2a4ed17587070647"
+            ]
+        ]
+    },
+    {
+        "id": "2a4ed17587070647",
+        "type": "exec",
+        "z": "192b09c1d46de512",
+        "command": "ssh -i /data/.ssh/id_ed25519 -o UserKnownHostsFile=/data/.ssh/known_hosts -o BatchMode=yes USER@RACK_PC_IP \"sudo shutdown -h now\"",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Shutdown",
+        "x": 890,
+        "y": 580,
+        "wires": [
+            [],
+            [
+                "a7e133add4e6f598"
+            ],
+            [
+                "a7e133add4e6f598"
+            ]
+        ]
+    },
+    {
+        "id": "a7e133add4e6f598",
+        "type": "debug",
+        "z": "192b09c1d46de512",
+        "name": "Shutdown result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1080,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "4214d86305b0207e",
+        "type": "function",
+        "z": "192b09c1d46de512",
+        "name": "Alert text",
+        "func": "msg.payload = msg.payload ? \"Switch off computer\" : \"Temperature normal\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 660,
+        "wires": [
+            [
+                "d7426c3c960ed879"
+            ]
+        ]
+    },
+    {
+        "id": "d7426c3c960ed879",
+        "type": "ui-text",
+        "z": "192b09c1d46de512",
+        "group": "cb4649e7f4580cc6",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "Computer Status",
+        "label": "Computer Status",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 920,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "3440173fd1b0be58",
+        "type": "ui-gauge",
+        "z": "192b09c1d46de512",
+        "name": "Rack Temperature",
+        "group": "cb4649e7f4580cc6",
+        "order": 2,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-34",
+        "gstyle": "rounded",
+        "title": "Rack Temperature",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "°C",
+        "icon": "thermometer",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "15",
+                "color": "#2b8a3e",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "27",
+                "color": "#f59f00",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "30",
+                "color": "#c92a2a",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 15,
+        "max": 45,
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 700,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d160d6dc6b346981",
+        "type": "ui-gauge",
+        "z": "192b09c1d46de512",
+        "name": "Rack Humidity",
+        "group": "cb4649e7f4580cc6",
+        "order": 3,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-34",
+        "gstyle": "rounded",
+        "title": "Rack Humidity",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "%",
+        "icon": "water-percent",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#f59f00",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "30",
+                "color": "#2b8a3e",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "60",
+                "color": "#f59f00",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "75",
+                "color": "#c92a2a",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": 100,
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 700,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c8f9413b4bb16102",
+        "type": "function",
+        "z": "192b09c1d46de512",
+        "name": "Split for gauges",
+        "func": "const t = Number(msg.payload.t);\nconst h = Number(msg.payload.h);\n\nreturn [\n    Number.isFinite(t) ? { payload: t } : null,   // Output 1: temperature gauge\n    Number.isFinite(h) ? { payload: h } : null    // Output 2: humidity gauge\n];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 780,
+        "wires": [
+            [
+                "3440173fd1b0be58"
+            ],
+            [
+                "d160d6dc6b346981"
+            ]
+        ]
+    },
+    {
+        "id": "159d1b7848884212",
+        "type": "function",
+        "z": "192b09c1d46de512",
+        "name": "Chart label",
+        "func": "msg.topic = \"Rack\";   // Legend name for the rack line\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 300,
+        "wires": [
+            [
+                "68fc36ec97985fd7"
+            ]
+        ]
+    },
+    {
+        "id": "51e90989d8f07590",
+        "type": "ui-template",
+        "z": "192b09c1d46de512",
+        "group": "ae805b69e83b5ec9",
+        "page": "",
+        "ui": "",
+        "name": "Outside card",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "head": "",
+        "format": "<template>\n  <div v-if=\"msg?.payload?.t === undefined\" class=\"ow-card\">Waiting for weather…</div>\n  <div v-else class=\"ow-card\">\n    <div class=\"ow-head\">\n      <img v-if=\"msg.payload.icon\" class=\"ow-icon\" alt=\"\"\n           :src=\"'https://openweathermap.org/img/wn/' + msg.payload.icon + '@2x.png'\">\n      <div>\n        <div class=\"ow-temp\">{{ msg.payload.t.toFixed(1) }} °C</div>\n        <div class=\"ow-desc\">{{ msg.payload.desc }}</div>\n      </div>\n    </div>\n    <div class=\"ow-grid\">\n      <div><span>Feels like</span><b>{{ msg.payload.feels.toFixed(1) }} °C</b></div>\n      <div><span>Humidity</span><b>{{ msg.payload.h }} %</b></div>\n      <div><span>Pressure</span><b>{{ msg.payload.p }} hPa</b></div>\n      <div><span>Wind</span><b>{{ ((msg.payload.wind || 0) * 3.6).toFixed(0) }} km/h</b></div>\n    </div>\n    <div class=\"ow-foot\">{{ msg.payload.place }} · updated {{ msg.payload.updated }}</div>\n  </div>\n</template>\n\n<style>\n.ow-card {\n  padding: 16px;\n  border-radius: 10px;\n  background: #0b7285;\n  color: white;\n}\n.ow-head { display: flex; align-items: center; gap: 8px; }\n.ow-icon { width: 64px; height: 64px; }\n.ow-temp { font-size: 32px; font-weight: 700; line-height: 1.1; }\n.ow-desc { font-size: 14px; text-transform: capitalize; }\n.ow-grid {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 8px;\n  margin-top: 12px;\n}\n.ow-grid div { display: flex; flex-direction: column; }\n.ow-grid span { font-size: 12px; opacity: 0.85; }\n.ow-grid b { font-size: 16px; }\n.ow-foot { margin-top: 10px; font-size: 12px; opacity: 0.85; }\n</style>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1000,
+        "y": 900,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1873660b7075f3c",
+        "type": "function",
+        "z": "192b09c1d46de512",
+        "name": "Parse weather",
+        "func": "const w = msg.payload;\nif (msg.statusCode !== 200 || !w || !w.main) {\n    node.status({ fill: \"red\", shape: \"ring\", text: (w && w.message) || `HTTP ${msg.statusCode}` });\n    return null;\n}\n\nconst outside = {\n    t: w.main.temp,\n    feels: w.main.feels_like,\n    h: w.main.humidity,\n    p: w.main.pressure,\n    wind: w.wind ? w.wind.speed : 0,                     // m/s\n    desc: w.weather && w.weather[0] ? w.weather[0].description : \"\",\n    icon: w.weather && w.weather[0] ? w.weather[0].icon : \"\",\n    place: w.name || \"\",\n    updated: new Date(w.dt * 1000).toLocaleTimeString(\"en-IN\", {\n        timeZone: \"Asia/Kolkata\", hour: \"2-digit\", minute: \"2-digit\"\n    })\n};\nflow.set(\"outside\", outside);   // Used by \"Rack vs outside\"\n\nnode.status({ fill: \"green\", shape: \"dot\", text: `${outside.t} °C, ${outside.desc}` });\n\nreturn [\n    { payload: outside },                            // Output 1: outside card\n    { topic: \"Outside\", payload: { t: outside.t } }  // Output 2: chart line\n];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 920,
+        "wires": [
+            [
+                "51e90989d8f07590"
+            ],
+            [
+                "68fc36ec97985fd7"
+            ]
+        ]
+    },
+    {
+        "id": "6545a9615f9145a6",
+        "type": "http request",
+        "z": "192b09c1d46de512",
+        "name": "Current weather",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 630,
+        "y": 920,
+        "wires": [
+            [
+                "a1873660b7075f3c"
+            ]
+        ]
+    },
+    {
+        "id": "8b76dfd530b136f5",
+        "type": "function",
+        "z": "192b09c1d46de512",
+        "name": "Weather URL",
+        "func": "msg.url = \"https://api.openweathermap.org/data/2.5/weather\" +\n    `?lat=${env.get(\"LAT\")}&lon=${env.get(\"LON\")}` +\n    `&units=metric&appid=${env.get(\"OWM_KEY\")}`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 920,
+        "wires": [
+            [
+                "6545a9615f9145a6"
+            ]
+        ]
+    },
+    {
+        "id": "2addee4ce9a85cbb",
+        "type": "inject",
+        "z": "192b09c1d46de512",
+        "name": "Every 10 min",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 270,
+        "y": 920,
+        "wires": [
+            [
+                "8b76dfd530b136f5"
+            ]
+        ]
+    },
+    {
+        "id": "eee714a1d708813c",
+        "type": "function",
+        "z": "192b09c1d46de512",
+        "name": "Parse forecast",
+        "func": "const f = msg.payload;\nif (msg.statusCode !== 200 || !f || !Array.isArray(f.list) || f.list.length === 0) {\n    node.status({ fill: \"red\", shape: \"ring\", text: (f && f.message) || `HTTP ${msg.statusCode}` });\n    return null;\n}\n\nconst next = f.list.slice(0, 8);   // Next 24 hours, in 3-hour steps\nlet hottest = next[0];\nfor (const e of next) {\n    if (e.main.temp_max > hottest.main.temp_max) hottest = e;\n}\nconst rain = Math.round(Math.max(...next.map(e => e.pop || 0)) * 100);\nconst max = hottest.main.temp_max;\nconst time = new Date(hottest.dt * 1000).toLocaleString(\"en-IN\", {\n    timeZone: \"Asia/Kolkata\", weekday: \"short\", hour: \"numeric\"\n});\n\nconst HOT = Number(env.get(\"HOT_DAY\")) || 34;\nlet level = \"ok\";\nlet advice = \"No weather concerns in the next 24 hours.\";\nif (max >= HOT) {\n    level = \"hot\";\n    advice = \"Hot period ahead: check the cooling before then.\";\n} else if (rain >= 60) {\n    level = \"rain\";\n    advice = \"Rain likely: keep doors closed to limit humidity.\";\n}\n\nnode.status({ fill: level === \"ok\" ? \"green\" : \"yellow\", shape: \"dot\", text: `max ${max} °C, rain ${rain}%` });\nreturn { payload: { max: max.toFixed(1), time, rain, level, advice } };",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 1000,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2ea21e0624bab69a",
+        "type": "http request",
+        "z": "192b09c1d46de512",
+        "name": "Forecast",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 630,
+        "y": 1000,
+        "wires": [
+            [
+                "eee714a1d708813c"
+            ]
+        ]
+    },
+    {
+        "id": "53e4bb0b457caa04",
+        "type": "function",
+        "z": "192b09c1d46de512",
+        "name": "Forecast URL",
+        "func": "msg.url = \"https://api.openweathermap.org/data/2.5/forecast\" +\n    `?lat=${env.get(\"LAT\")}&lon=${env.get(\"LON\")}` +\n    `&units=metric&appid=${env.get(\"OWM_KEY\")}`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 1000,
+        "wires": [
+            [
+                "2ea21e0624bab69a"
+            ]
+        ]
+    },
+    {
+        "id": "624c065cc6bf04c8",
+        "type": "inject",
+        "z": "192b09c1d46de512",
+        "name": "Every 30 min",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1800",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "2",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 270,
+        "y": 1000,
+        "wires": [
+            [
+                "53e4bb0b457caa04"
+            ]
+        ]
+    },
+    {
+        "id": "7a8dc9250539115b",
+        "type": "ui-text",
+        "z": "192b09c1d46de512",
+        "group": "ae805b69e83b5ec9",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "Rack vs outside",
+        "label": "Rack vs outside",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": true,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 700,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "267b50a3613728ab",
+        "type": "function",
+        "z": "192b09c1d46de512",
+        "name": "Rack vs outside",
+        "func": "const o = flow.get(\"outside\");\nconst t = Number(msg.payload.t);\nif (!o || !Number.isFinite(t)) return null;\n\nconst diff = t - o.t;\nlet text = Math.abs(diff) < 0.5\n    ? \"Rack is about the same as outside\"\n    : `Rack is ${Math.abs(diff).toFixed(1)} °C ${diff > 0 ? \"warmer\" : \"cooler\"} than outside`;\n\n// Pressure check, once the BME280 sends \"p\"\nconst p = Number(msg.payload.p);\nif (Number.isFinite(p) && o.p) {\n    text += ` · Pressure ${p.toFixed(1)} hPa (outside ${o.p} hPa)`;\n}\n\nreturn { payload: text };",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 840,
+        "wires": [
+            [
+                "7a8dc9250539115b"
+            ]
+        ]
+    },
+    {
+        "id": "c04f3cd03e3b81e6",
+        "type": "mqtt-broker",
+        "name": "emqx",
+        "broker": "broker.emqx.io",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "76f5011f81d2474b",
+        "type": "ui-group",
+        "name": "Temperature Graph",
+        "page": "826b59668c5cc7d2",
+        "width": 6,
+        "height": 1,
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default",
+        "tab": ""
+    },
+    {
+        "id": "cb4649e7f4580cc6",
+        "type": "ui-group",
+        "name": "Data",
+        "page": "826b59668c5cc7d2",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default",
+        "tab": ""
+    },
+    {
+        "id": "c17d0393d0d1e62f",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "page",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true,
+        "allowInstall": false
+    },
+    {
+        "id": "ae805b69e83b5ec9",
+        "type": "ui-group",
+        "name": "Outside Weather",
+        "page": "826b59668c5cc7d2",
+        "width": 6,
+        "height": 1,
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default",
+        "tab": ""
+    },
+    {
+        "id": "826b59668c5cc7d2",
+        "type": "ui-page",
+        "name": "Page 1",
+        "ui": "c17d0393d0d1e62f",
+        "path": "/page1",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "5fbd23176648a724",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": 0,
+                "cols": 3
+            },
+            {
+                "name": "Tablet",
+                "px": 576,
+                "cols": 6
+            },
+            {
+                "name": "Small Desktop",
+                "px": 768,
+                "cols": 9
+            },
+            {
+                "name": "Desktop",
+                "px": 1024,
+                "cols": 12
+            }
+        ],
+        "tabs": [],
+        "order": 2,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "5fbd23176648a724",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#fcfcfd",
+            "primary": "#0d74ce",
+            "bgPage": "#f9f9fb",
+            "groupBg": "#ffffff",
+            "groupOutline": "#d9d9e0"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "1a7cb5e2fd700b42",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@flowfuse/node-red-dashboard": "1.34.1"
+        }
+    }
+]
