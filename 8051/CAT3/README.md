@@ -10,9 +10,13 @@
 
 ---
 
-## ACTIVITY : Four-State LED Control System
+## Overview
 
-### 1. Circuit Diagram
+Design a register-level GPIO controller in bare-metal Embedded C for the AT89S52: four LEDs are digital outputs and a push-button is a digital input. Each debounced button press moves the system to the next LED mode, so the program behaves as a four-state machine.
+
+**Expected outcome:** Each press advances the LED behaviour: running LED → binary counter → alternating pattern → all-LED flash → running LED.
+
+## Circuit Diagram
 
 - **Microcontroller:** AT89S52 (8051 core) on the AT89S52 development kit
 - **GPIO Port / Pins (LEDs):** Port 1 – P1.1 (LED1), P1.3 (LED2), P1.5 (LED3), P1.7 (LED4)
@@ -22,38 +26,10 @@
 
 ![Circuit Diagram](circuit.png)
 
-### 2. Core Logic / Pseudocode / Code Base
+## Tasks
 
-**Working Principle:**
+| Task | What it does | Outcome |
+|---|---|---|
+| [TASK 3A Four-State LED Control System](TASK3A/) | Debounced button cycles through running LED, binary counter, alternating and flashing modes | Four-state LED controller |
 
-The four LEDs are outputs on Port 1 and the push-button is read on P2.0 while its column P2.5 is held low. The system is a state machine held in the variable `mode`. Each debounced press advances the mode 0 → 1 → 2 → 3 → 4 → 1 and resets the pattern counters. A press is accepted only if P2.0 is still low after about 10 ms (debouncing).
-
-| Mode | LED behaviour (LED1 LED2 LED3 LED4) |
-|---|---|
-| 0 | All OFF (power-on) |
-| 1 | Running LED: 1000 → 0100 → 0010 → 0001 |
-| 2 | Binary counter 0000 → 1111 |
-| 3 | Alternating 1010 ↔ 0101 |
-| 4 | All LED flash 1111 ↔ 0000 |
-
-**Pseudocode:**
-
-1. Define the four LED pins and the keypad row/column pins.
-2. Hold the column low, turn all LEDs OFF and set `mode = 0`.
-3. If the button is pressed and still pressed after ≈ 10 ms, advance `mode` and reset the counters.
-4. Mode 1: light only the LED at `pos`, then move to the next position.
-5. Mode 2: output `count` in binary on the LEDs, then increment it (0–15).
-6. Mode 3: alternate between 1010 and 0101.
-7. Mode 4: alternate between all ON and all OFF.
-8. Wait ≈ 0.3 s and repeat.
-
-**Code Base:**
-
-- `sbit` maps each LED and keypad line to its port bit.
-- `btn()` reads the button with a second read after a software delay (debouncing).
-- `wait(ms)` is the software delay used between pattern steps.
-- `mode`, `pos`, `count`, `alt` and `flash` hold the state of the system.
-
-### 3. Inference
-
-Each press of the button moves the system to the next LED mode. Representing the four modes as states of one variable and debouncing the button in software gives a predictable four-state LED controller using only register-level GPIO access.
+Each task folder contains its Keil µVision project (`.uvproj`, C source, `STARTUP.A51`, `Objects/*.hex`) and a README with the task's hardware, core logic, pseudocode, code base and inference.

@@ -32,6 +32,6 @@ Configure the STM32 USART with CubeMX and the HAL library, communicate with a PC
 | Task | What it does | Outcome |
 |---|---|---|
 | [TASK 9A Basic UART Communication](TASK9A/) | Transmits a character every second and echoes every received character | Bidirectional UART link at 115200-8-N-1 verified |
-| [TASK 9B String-Based Application Logic](TASK9B/) | Collects characters until CR/LF and executes `LED ON` / `LED OFF` / `LED TOGGLE` | LED controlled by text commands; CR/LF behaviour understood |
+| [TASK 9B String-Based Application Logic](TASK9B/) | Sends the CR/LF test strings, then executes `LED ON` / `LED OFF` / `LED TOGGLE` and replies to each | LED controlled by text commands with confirmation replies; CR/LF behaviour shown |
 
 Each task folder contains its STM32CubeMX / STM32CubeIDE project and a README with the task's hardware, core logic, pseudocode, code base and inference.

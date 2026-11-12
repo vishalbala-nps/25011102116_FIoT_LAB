@@ -12,12 +12,12 @@ Each experiment folder (`CATn`) has a **README.md** index with the experiment de
 
 | # | Experiment | Key concepts | Project |
 |---|---|---|---|
-| [Cat 2](8051/CAT2/) | Bare-metal LED blink and custom delay library | SFR bit access (`sbit`), software delay, `delay_ms()` library | [`TASK_2`](8051/CAT2/TASK_2_Bare_Metal_LED_Blink/), [`TASK_3`](8051/CAT2/TASK_3_Custom_Delay_Library/) |
-| [Cat 3](8051/CAT3/) | Button-controlled four-mode LED pattern generator | GPIO input, debouncing, state machine | [`CAT3`](8051/CAT3/) |
-| [Cat 4](8051/CAT4/) | HMI with matrix keypad, LEDs and seven-segment display | Keypad scanning, seven-segment codes, mode flags | [`CAT4`](8051/CAT4/) |
-| [Cat 5](8051/CAT5/) | Hardware timer-based LED blinking | Timer 0 Mode 1, preload calculation, overflow flag | [`CAT5`](8051/CAT5/) |
-| [Cat 6](8051/CAT6/) | UART driver and serial debugging | SCON/TMOD, Timer 1 baud-rate generation, TI/RI flags, echo | [`TASK_A`](8051/CAT6/TASK_A_UART_Initialization_and_Character_Transmission/), [`TASK_B`](8051/CAT6/TASK_B_UART_Echo/) |
-| [Cat 7](8051/CAT7/) | 16×2 LCD driver, dynamic display and keypad control | HD44780 4-bit interface, DDRAM addressing, keypad scanning | [`TASK_7A`](8051/CAT7/TASK_7A_LCD_Initialization_and_Character_String_Display/), [`TASK_7B`](8051/CAT7/TASK_7B_Cursor_Positioning_and_Dynamic_Value_Update/), [`TASK_7C`](8051/CAT7/TASK_7C_Keypad_Based_Character_Movement/) |
+| [Cat 2](8051/CAT2/) | Bare-metal LED blink and custom delay library | SFR bit access (`sbit`), software delay, `delay_ms()` library | [`TASK2B`](8051/CAT2/TASK2B/), [`TASK2C`](8051/CAT2/TASK2C/) |
+| [Cat 3](8051/CAT3/) | Button-controlled four-mode LED pattern generator | GPIO input, debouncing, state machine | [`TASK3A`](8051/CAT3/TASK3A/) |
+| [Cat 4](8051/CAT4/) | HMI with matrix keypad, LEDs and seven-segment display | Keypad scanning, seven-segment codes, mode flags | [`TASK4A`](8051/CAT4/TASK4A/) |
+| [Cat 5](8051/CAT5/) | Hardware timer-based LED blinking | Timer 0 Mode 1, preload calculation, overflow flag | [`TASK5A`](8051/CAT5/TASK5A/) |
+| [Cat 6](8051/CAT6/) | UART driver and serial debugging | SCON/TMOD, Timer 1 baud-rate generation, TI/RI flags, echo | [`TASK6A`](8051/CAT6/TASK6A/), [`TASK6B`](8051/CAT6/TASK6B/) |
+| [Cat 7](8051/CAT7/) | 16×2 LCD driver, dynamic display and keypad control | HD44780 4-bit interface, DDRAM addressing, keypad scanning | [`TASK7A`](8051/CAT7/TASK7A/), [`TASK7B`](8051/CAT7/TASK7B/), [`TASK7C`](8051/CAT7/TASK7C/) |
 
 ### STM32 – STM32CubeMX + HAL, STM32CubeIDE
 

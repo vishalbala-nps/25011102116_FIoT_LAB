@@ -21,7 +21,7 @@
 #include <string.h>
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,7 +56,9 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void sendString(char *st) {
+	HAL_UART_Transmit(&huart2, (uint8_t *)st, strlen(st), HAL_MAX_DELAY);
+}
 /* USER CODE END 0 */
 
 /**
@@ -98,6 +100,16 @@ int main(void)
   char buf[128];
   int lastInd = 0;
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+
+  // Carriage Return / Line Feed tests
+  sendString("HELLO\r\n");            // Test 1: new line at column 1
+  HAL_Delay(1000);
+  sendString("HELLO\r");              // Test 2: cursor back to start of the same line
+  HAL_Delay(1000);
+  sendString("HELLO\n");              // Test 3: next line, same column
+  HAL_Delay(1000);
+  sendString("HELLO\r\nWORLD\r\n");   // Test 4: two separate lines
+
   uint8_t ch;
   while (1)
   {
@@ -108,10 +120,13 @@ int main(void)
 				  buf[lastInd] = '\0';
 				  if (!strcmp(buf,"LED ON")) {
 					  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+					  sendString("\r\nLED turned ON\r\n");
 				  } else if (!strcmp(buf,"LED OFF")) {
 					  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+					  sendString("\r\nLED turned OFF\r\n");
 				  } else if (!strcmp(buf,"LED TOGGLE")) {
 					  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+					  sendString("\r\nLED toggled\r\n");
 				  }
 				  lastInd = 0;
 			  }

@@ -19,24 +19,25 @@ Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 **Working Principle:**
 
-The received characters are collected into a buffer to form a command string. When a Carriage Return (`\r`) or Line Feed (`\n`) is received, the command is complete: the buffer is terminated and compared with the known commands, and the matching LED action is performed. The LED starts OFF.
+The received characters are collected into a buffer to form a command string. When a Carriage Return (`\r`) or Line Feed (`\n`) is received, the command is complete: the buffer is terminated and compared with the known commands, and the matching LED action is performed and a confirmation message is sent back to the terminal. At start-up the four Carriage Return / Line Feed test strings are transmitted, and the LED starts OFF.
 
-| Command | Action |
-|---|---|
-| `LED ON` | LED turned ON (PC13 LOW) |
-| `LED OFF` | LED turned OFF (PC13 HIGH) |
-| `LED TOGGLE` | LED toggled |
+| Command | Action | Reply |
+|---|---|---|
+| `LED ON` | PC13 LOW (LED ON) | `LED turned ON` |
+| `LED OFF` | PC13 HIGH (LED OFF) | `LED turned OFF` |
+| `LED TOGGLE` | PC13 toggled | `LED toggled` |
 
 **Pseudocode:**
 
 1. Initialize the HAL library, clock, GPIO and USART2; turn the LED OFF.
-2. Receive one character and echo it back.
-3. If the character is `\r` or `\n` and the buffer is not empty:
+2. Transmit the CR/LF test strings `"HELLO\r\n"`, `"HELLO\r"`, `"HELLO\n"` and `"HELLO\r\nWORLD\r\n"`, one second apart.
+3. Receive one character and echo it back.
+4. If the character is `\r` or `\n` and the buffer is not empty:
    - terminate the buffer with `'\0'`;
-   - compare it with `LED ON`, `LED OFF` and `LED TOGGLE` and perform the matching action;
+   - compare it with `LED ON`, `LED OFF` and `LED TOGGLE`, perform the matching action and send the reply;
    - clear the buffer.
-4. Otherwise, add the character to the buffer.
-5. Repeat continuously.
+5. Otherwise, add the character to the buffer.
+6. Repeat continuously.
 
 **Code Base:**
 
@@ -44,8 +45,20 @@ The received characters are collected into a buffer to form a command string. Wh
 - `strcmp()` compares the received command with each known command.
 - `HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET / GPIO_PIN_SET)` turns the LED ON / OFF.
 - `HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13)` toggles the LED.
+- `sendString()` transmits the replies and the CR/LF test strings with `HAL_UART_Transmit()`.
+
+**PC Terminal Output:**
+
+```
+LED ON
+LED turned ON
+LED TOGGLE
+LED toggled
+```
 
 **Carriage Return and Line Feed:**
+
+The test strings sent at start-up show:
 
 | Test string | Result in PuTTY |
 |---|---|
@@ -58,4 +71,4 @@ The received characters are collected into a buffer to form a command string. Wh
 
 ### 3. Inference
 
-Typing `LED ON`, `LED OFF` or `LED TOGGLE` in PuTTY controls the onboard LED. Collecting characters until CR/LF and comparing the complete string turns the UART into a simple text command interface, demonstrating string handling on top of HAL UART communication.
+Typing `LED ON`, `LED OFF` or `LED TOGGLE` in PuTTY controls the onboard LED, and the STM32 confirms each command with a reply. Collecting characters until CR/LF and comparing the complete string turns the UART into a simple text command interface, demonstrating string handling on top of HAL UART communication.
