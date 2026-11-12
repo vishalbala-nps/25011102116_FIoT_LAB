@@ -1,20 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 10D Observe the HTTP Request and Construct a Static HTTP Response
 
-**EXP:** CONTINUOUS ASSESSMENT 10C
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** HTTP Server - STM32–Wemos Wi-Fi Modem Using AT Commands
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Development Board Blue Pill STM32F103C8T6 + Wemos D1 Mini (ESP8266) Wi-Fi Module + USB-to-TTL Serial Converter + PuTTY + Browser / Node-RED
+**Experiment:** [CONTINUOUS ASSESSMENT 10C – HTTP Server - STM32–Wemos Wi-Fi Modem Using AT Commands](../README.md)
 
 ---
 
-## TASK 10D Observe the HTTP Request and Construct a Static HTTP Response
-
-### 1. Circuit Diagram
-
-The same circuit as Task 10C is used.
+### 1. Hardware Used
 
 - **Development Board:** STM32 Blue Pill
 - **Microcontroller IC:** STM32F103C8T6 (ARM Cortex-M3, 72 MHz)
@@ -23,7 +13,7 @@ The same circuit as Task 10C is used.
 - **Peripherals:** Wemos D1 Mini (ESP8266) running AT firmware, USB-to-TTL (3.3 V) converter to PuTTY (115200-8-N-1)
 - **Power Supply:** Wemos powered from 5 V; STM32, Wemos and converter share a common GND
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 

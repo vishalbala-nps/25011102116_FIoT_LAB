@@ -1,20 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 12C Node-RED Statistics of the BME280 Data
 
-**EXP:** CONTINUOUS ASSESSMENT 12
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** BME280 Sensor Interfacing Using I²C and Bosch Sensor API
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Nucleo Development Board NUCLEO-F401RE (STM32F401RET6) + Bosch BME280 Sensor + Wemos D1 Mini (ESP8266) Wi-Fi Module + USB-to-TTL Serial Converter
+**Experiment:** [CONTINUOUS ASSESSMENT 12 – BME280 Sensor Interfacing Using I²C and Bosch Sensor API](../README.md)
 
 ---
 
-## TASK 12C Node-RED Statistics of the BME280 Data
-
-### 1. Circuit Diagram
-
-The circuit and firmware from Task 12B are used; Node-RED runs on a PC on the same Wi-Fi network.
+### 1. Hardware Used
 
 - **Development Board:** NUCLEO-F401RE
 - **Microcontroller IC:** STM32F401RET6
@@ -23,7 +13,7 @@ The circuit and firmware from Task 12B are used; Node-RED runs on a PC on the sa
 - **Peripherals:** BME280, Wemos D1 Mini (ESP8266) HTTP server, PC running Node-RED
 - **Power Supply:** BME280 from 3.3 V, Wemos from 5 V, common GND
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 
@@ -47,7 +37,6 @@ Node-RED acts as an HTTP client of the STM32/ESP8266 server. An Inject node trig
 
 **Code Base:**
 
-- STM32 firmware (same as Task 12B) and the Node-RED flow [`node-red-flow.json`](node-red-flow.json).
 - Import the flow in Node-RED (**Menu → Import**), replace `<ESP8266_IP>` in the HTTP Request node with the IP address printed on the PC terminal, and **Deploy**.
 - Nodes: Inject (every 5 s) → HTTP Request (GET, parsed JSON object) → Function (min / max / average in `context`) → Debug.
 

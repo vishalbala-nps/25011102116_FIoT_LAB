@@ -1,20 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 9B String-Based Application Logic
 
-**EXP:** CONTINUOUS ASSESSMENT 9
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** STM32 UART Command Controlled LED
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Development Board Blue Pill STM32F103C6T6A + USB-to-TTL Serial Converter + PuTTY
+**Experiment:** [CONTINUOUS ASSESSMENT 9 – STM32 UART Command Controlled LED](../README.md)
 
 ---
 
-## TASK 9B String-Based Application Logic
-
-### 1. Circuit Diagram
-
-The same UART connection as Task 9A is used, along with the onboard LED.
+### 1. Hardware Used
 
 - **Development Board:** STM32 Blue Pill
 - **Microcontroller IC:** STM32F103C6T6A
@@ -23,7 +13,7 @@ The same UART connection as Task 9A is used, along with the onboard LED.
 - **Peripherals:** Onboard LED on PC13 (active-low), USB-to-TTL converter to PuTTY
 - **Power Supply:** 3.3 V from the board
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 

@@ -1,20 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 1 On-board LED Bring-Up
 
-**EXP:** CONTINUOUS ASSESSMENT 11
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** STM32F401RE Cortex-M4: GPIO and User Input Programming
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Nucleo Development Board NUCLEO-F401RE (STM32F401RET6)
+**Experiment:** [CONTINUOUS ASSESSMENT 11 – STM32F401RE Cortex-M4: GPIO and User Input Programming](../README.md)
 
 ---
 
-## TASK 1 On-board LED Bring-Up
-
-### 1. Circuit Diagram
-
-The experiment uses the onboard LED of the NUCLEO-F401RE.
+### 1. Hardware Used
 
 - **Development Board:** NUCLEO-F401RE
 - **Microcontroller IC:** STM32F401RET6 (ARM Cortex-M4 with FPU, 84 MHz)
@@ -22,7 +12,7 @@ The experiment uses the onboard LED of the NUCLEO-F401RE.
 - **Peripheral:** Onboard green LED LD2 (active-high)
 - **Power Supply:** 5 V over the ST-LINK USB connector
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 

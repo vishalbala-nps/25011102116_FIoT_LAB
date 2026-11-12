@@ -1,20 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 8A GPIO Input/Output
 
-**EXP:** CONTINUOUS ASSESSMENT 8
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** STM32 GPIO Bring-Up and Switch-Controlled LED
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Development Board Blue Pill STM32F103C6T6A + Push-Button
+**Experiment:** [CONTINUOUS ASSESSMENT 8 – STM32 GPIO Bring-Up and Switch-Controlled LED](../README.md)
 
 ---
 
-## TASK 8A GPIO Input/Output
-
-### 1. Circuit Diagram
-
-The experiment uses the onboard LED of the STM32 Blue Pill and an external push-button.
+### 1. Hardware Used
 
 - **Development Board:** STM32 Blue Pill
 - **Microcontroller IC:** STM32F103C6T6A (ARM Cortex-M3, 72 MHz from the 8 MHz HSE crystal)
@@ -22,7 +12,7 @@ The experiment uses the onboard LED of the STM32 Blue Pill and an external push-
 - **Peripherals:** Onboard LED on PC13 (active-low), push-button between PA15 and GND
 - **Power Supply:** 3.3 V from the board; push-button returns to GND
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 

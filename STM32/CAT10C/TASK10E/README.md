@@ -1,20 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 10E Node-RED as a Second HTTP Client of STM32/ESP8266 HTTP Server
 
-**EXP:** CONTINUOUS ASSESSMENT 10C
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** HTTP Server - STM32–Wemos Wi-Fi Modem Using AT Commands
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Development Board Blue Pill STM32F103C8T6 + Wemos D1 Mini (ESP8266) Wi-Fi Module + USB-to-TTL Serial Converter + PuTTY + Browser / Node-RED
+**Experiment:** [CONTINUOUS ASSESSMENT 10C – HTTP Server - STM32–Wemos Wi-Fi Modem Using AT Commands](../README.md)
 
 ---
 
-## TASK 10E Node-RED as a Second HTTP Client of STM32/ESP8266 HTTP Server
-
-### 1. Circuit Diagram
-
-The circuit and firmware from Task 10D are used; Node-RED runs on a PC on the same Wi-Fi network.
+### 1. Hardware Used
 
 - **Development Board:** STM32 Blue Pill
 - **Microcontroller IC:** STM32F103C8T6 (ARM Cortex-M3, 72 MHz)
@@ -23,7 +13,7 @@ The circuit and firmware from Task 10D are used; Node-RED runs on a PC on the sa
 - **Peripherals:** Wemos D1 Mini (ESP8266) running AT firmware, USB-to-TTL (3.3 V) converter to PuTTY (115200-8-N-1)
 - **Power Supply:** Wemos powered from 5 V; STM32, Wemos and converter share a common GND
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 
@@ -41,7 +31,6 @@ Node-RED acts as a second HTTP client of the same STM32/ESP8266 server. An Injec
 
 **Code Base:**
 
-- STM32 firmware (same as Task 10D) and the Node-RED flow [`node-red-flow.json`](node-red-flow.json).
 - Import the flow in Node-RED (**Menu → Import**), replace `<ESP8266_IP>` in the HTTP Request node with the IP address printed on the PC terminal, and **Deploy**.
 - Nodes: Inject → HTTP Request (GET, UTF-8 string) → Debug (complete message).
 

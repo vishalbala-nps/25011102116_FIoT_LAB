@@ -1,20 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 9C Connect Wemos to Wi-Fi
 
-**EXP:** CONTINUOUS ASSESSMENT 10
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** STM32–Wemos Wi-Fi Modem Interface Using AT Commands
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Development Board Blue Pill STM32F103C8T6 + Wemos D1 Mini (ESP8266) Wi-Fi Module + USB-to-TTL Serial Converter + PuTTY
+**Experiment:** [CONTINUOUS ASSESSMENT 10 – STM32–Wemos Wi-Fi Modem Interface Using AT Commands](../README.md)
 
 ---
 
-## TASK 9C Connect Wemos to Wi-Fi
-
-### 1. Circuit Diagram
-
-The same circuit as Task 9A is used.
+### 1. Hardware Used
 
 - **Development Board:** STM32 Blue Pill
 - **Microcontroller IC:** STM32F103C8T6
@@ -22,7 +12,7 @@ The same circuit as Task 9A is used.
 - **Peripherals:** Wemos D1 Mini (ESP8266), USB-to-TTL converter, Wi-Fi access point
 - **Power Supply:** 5 V to the Wemos, common GND
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 

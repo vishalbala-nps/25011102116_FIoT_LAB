@@ -1,20 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 8C Short Press vs Long Press
 
-**EXP:** CONTINUOUS ASSESSMENT 8
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** STM32 GPIO Bring-Up and Switch-Controlled LED
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Development Board Blue Pill STM32F103C6T6A + Push-Button
+**Experiment:** [CONTINUOUS ASSESSMENT 8 – STM32 GPIO Bring-Up and Switch-Controlled LED](../README.md)
 
 ---
 
-## TASK 8C Short Press vs Long Press
-
-### 1. Circuit Diagram
-
-The same circuit as Task 8A is used.
+### 1. Hardware Used
 
 - **Development Board:** STM32 Blue Pill
 - **Microcontroller IC:** STM32F103C6T6A
@@ -22,7 +12,7 @@ The same circuit as Task 8A is used.
 - **Peripherals:** Onboard LED (active-low), push-button to GND
 - **Power Supply:** 3.3 V from the board
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 

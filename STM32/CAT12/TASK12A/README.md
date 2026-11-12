@@ -1,20 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 12A BME280 Sensor Interfacing Using I²C and Bosch Sensor API
 
-**EXP:** CONTINUOUS ASSESSMENT 12
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** BME280 Sensor Interfacing Using I²C and Bosch Sensor API
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Nucleo Development Board NUCLEO-F401RE (STM32F401RET6) + Bosch BME280 Sensor + Wemos D1 Mini (ESP8266) Wi-Fi Module + USB-to-TTL Serial Converter
+**Experiment:** [CONTINUOUS ASSESSMENT 12 – BME280 Sensor Interfacing Using I²C and Bosch Sensor API](../README.md)
 
 ---
 
-## TASK 12A BME280 Sensor Interfacing Using I²C and Bosch Sensor API
-
-### 1. Circuit Diagram
-
-The BME280 sensor is connected to the NUCLEO-F401RE over I²C, and the readings are sent to the PC through a USB-to-TTL converter.
+### 1. Hardware Used
 
 - **Development Board:** NUCLEO-F401RE
 - **Microcontroller IC:** STM32F401RET6 (ARM Cortex-M4 with FPU, 84 MHz)
@@ -23,7 +13,7 @@ The BME280 sensor is connected to the NUCLEO-F401RE over I²C, and the readings 
 - **Peripherals:** Bosch BME280 module (temperature, pressure, humidity), I²C address 0x76 (SDO to GND); USB-to-TTL converter to PuTTY (115200-8-N-1)
 - **Power Supply:** BME280 powered from the Nucleo 3.3 V pin, common GND
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 
@@ -43,6 +33,7 @@ I2C1 is configured as an I²C master at 100 kHz. The official Bosch Sensortec BM
 8. Repeat every second.
 
 **Code Base:**
+
 
 | Bosch API needs | Implemented as | HAL function |
 |---|---|---|

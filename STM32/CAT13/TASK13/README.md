@@ -1,20 +1,12 @@
-# EXPERIMENT DETAILS
+# TASK 13 BME280 Data Publishing over MQTT using the Custom ESP8266 API
 
-**EXP:** CONTINUOUS ASSESSMENT 13
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** BME280 Sensor Interfacing Using I²C and (MQTT) using Custom Built ESP8266 API
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Nucleo Development Board NUCLEO-F401RE (STM32F401RET6) + Bosch BME280 Sensor + Wemos D1 Mini (ESP8266) Wi-Fi Module + MQTT Broker (broker.emqx.io)
+**Experiment:** [CONTINUOUS ASSESSMENT 13 – BME280 Sensor Interfacing Using I²C and (MQTT) using Custom Built ESP8266 API](../README.md)
 
 ---
 
 ## STEP 1–3 Implement Interface Wrappers (ESP8266 MQTT API)
 
-### 1. Circuit Diagram
-
-The NUCLEO-F401RE drives the ESP8266 over UART to connect to an MQTT broker.
+### 1. Hardware Used
 
 - **Development Board:** NUCLEO-F401RE
 - **Microcontroller IC:** STM32F401RET6 (ARM Cortex-M4 with FPU, 84 MHz)
@@ -23,7 +15,7 @@ The NUCLEO-F401RE drives the ESP8266 over UART to connect to an MQTT broker.
 - **Network:** Wi-Fi access point → MQTT broker `broker.emqx.io`, TCP port 1883
 - **Power Supply:** Wemos powered from 5 V, common GND
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 
@@ -56,9 +48,7 @@ The STM32 connects to the public MQTT broker through the ESP8266. MQTT runs on t
 
 ## Develop the Application
 
-### 1. Circuit Diagram
-
-The circuit from Step 1–3 is extended with the BME280 sensor.
+### 1. Hardware Used
 
 - **Development Board:** NUCLEO-F401RE
 - **Microcontroller IC:** STM32F401RET6
@@ -67,7 +57,7 @@ The circuit from Step 1–3 is extended with the BME280 sensor.
 - **Peripherals:** Bosch BME280 module (I²C address 0x76), Wemos D1 Mini (ESP8266)
 - **Power Supply:** BME280 from 3.3 V, Wemos from 5 V, common GND
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 

@@ -1,20 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 12B Raw HTTP Response with BME280 Data
 
-**EXP:** CONTINUOUS ASSESSMENT 12
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** BME280 Sensor Interfacing Using I²C and Bosch Sensor API
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Nucleo Development Board NUCLEO-F401RE (STM32F401RET6) + Bosch BME280 Sensor + Wemos D1 Mini (ESP8266) Wi-Fi Module + USB-to-TTL Serial Converter
+**Experiment:** [CONTINUOUS ASSESSMENT 12 – BME280 Sensor Interfacing Using I²C and Bosch Sensor API](../README.md)
 
 ---
 
-## TASK 12B Raw HTTP Response with BME280 Data
-
-### 1. Circuit Diagram
-
-The circuit from Task 12A is extended with the Wi-Fi module and a debug UART.
+### 1. Hardware Used
 
 - **Development Board:** NUCLEO-F401RE
 - **Microcontroller IC:** STM32F401RET6
@@ -24,7 +14,7 @@ The circuit from Task 12A is extended with the Wi-Fi module and a debug UART.
 - **Peripherals:** BME280, Wemos D1 Mini (ESP8266) running AT firmware, USB-to-TTL converter to PuTTY
 - **Power Supply:** BME280 from 3.3 V, Wemos from 5 V, common GND
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 

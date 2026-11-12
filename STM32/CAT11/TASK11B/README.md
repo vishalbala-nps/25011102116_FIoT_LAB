@@ -1,18 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 2 On-board Switch Control with State Remembrance
 
-**EXP:** CONTINUOUS ASSESSMENT 11
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** STM32F401RE Cortex-M4: GPIO and User Input Programming
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Nucleo Development Board NUCLEO-F401RE (STM32F401RET6)
+**Experiment:** [CONTINUOUS ASSESSMENT 11 – STM32F401RE Cortex-M4: GPIO and User Input Programming](../README.md)
 
 ---
 
-## TASK 2 On-board Switch Control with State Remembrance
-
-### 1. Circuit Diagram
+### 1. Hardware Used
 
 - **Development Board:** NUCLEO-F401RE
 - **Microcontroller IC:** STM32F401RET6
@@ -20,7 +12,7 @@
 - **Peripherals:** Onboard LED LD2 (active-high), onboard blue user button B1 (active-low)
 - **Power Supply:** 5 V over the ST-LINK USB connector
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 

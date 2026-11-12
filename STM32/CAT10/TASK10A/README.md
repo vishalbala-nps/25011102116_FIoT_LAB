@@ -1,20 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 9A Establish STM32 ↔ Wemos UART Communication
 
-**EXP:** CONTINUOUS ASSESSMENT 10
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** STM32–Wemos Wi-Fi Modem Interface Using AT Commands
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Development Board Blue Pill STM32F103C8T6 + Wemos D1 Mini (ESP8266) Wi-Fi Module + USB-to-TTL Serial Converter + PuTTY
+**Experiment:** [CONTINUOUS ASSESSMENT 10 – STM32–Wemos Wi-Fi Modem Interface Using AT Commands](../README.md)
 
 ---
 
-## TASK 9A Establish STM32 ↔ Wemos UART Communication
-
-### 1. Circuit Diagram
-
-The STM32 uses two UARTs: one to send AT commands to the Wemos and one to show the results on the PC terminal.
+### 1. Hardware Used
 
 - **Development Board:** STM32 Blue Pill
 - **Microcontroller IC:** STM32F103C8T6 (ARM Cortex-M3, 72 MHz)
@@ -28,7 +18,7 @@ The STM32 uses two UARTs: one to send AT commands to the Wemos and one to show t
 | USART1 | STM32 ↔ Wemos | AT commands and responses |
 | USART2 | STM32 ↔ PC | Debug / display |
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 

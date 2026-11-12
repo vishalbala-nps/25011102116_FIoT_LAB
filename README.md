@@ -4,7 +4,7 @@ Lab experiments for **25CS2741 Fundamentals of Internet of Things + Lab** (B.Tec
 
 The experiments start with bare-metal register programming on the 8051, move to STM32 microcontrollers with STM32CubeMX and the HAL library, and finish with networked sensing: an STM32 reads a BME280 sensor and serves or publishes the data over Wi-Fi through an ESP8266, using HTTP and MQTT.
 
-Each experiment folder has its own **README.md** covering the experiment name, hardware setup, pin configuration, circuit diagram, code logic (pseudocode), task files and inference.
+Each experiment folder (`CATn`) has a **README.md** index with the experiment details, date, overview, circuit diagram and a table of its tasks. Each task folder (`TASKnX`) contains the project and its own **README.md** with the hardware used, core logic, pseudocode, code base and inference.
 
 ## Experiments
 

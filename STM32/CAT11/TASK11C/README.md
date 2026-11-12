@@ -1,20 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 3 Short-Press and Long-Press Detection
 
-**EXP:** CONTINUOUS ASSESSMENT 11
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** STM32F401RE Cortex-M4: GPIO and User Input Programming
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Nucleo Development Board NUCLEO-F401RE (STM32F401RET6)
+**Experiment:** [CONTINUOUS ASSESSMENT 11 – STM32F401RE Cortex-M4: GPIO and User Input Programming](../README.md)
 
 ---
 
-## TASK 3 Short-Press and Long-Press Detection
-
-### 1. Circuit Diagram
-
-The same circuit as Task 2 is used.
+### 1. Hardware Used
 
 - **Development Board:** NUCLEO-F401RE
 - **Microcontroller IC:** STM32F401RET6
@@ -22,7 +12,7 @@ The same circuit as Task 2 is used.
 - **Peripherals:** Onboard LED LD2, onboard user button B1
 - **Power Supply:** 5 V over the ST-LINK USB connector
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 

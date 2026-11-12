@@ -1,20 +1,10 @@
-# EXPERIMENT DETAILS
+# TASK 9A Basic UART Communication
 
-**EXP:** CONTINUOUS ASSESSMENT 9
-
-**DATE:** DD/MM/YYYY
-
-**NAME OF EXP:** STM32 UART Command Controlled LED
-
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Development Board Blue Pill STM32F103C6T6A + USB-to-TTL Serial Converter + PuTTY
+**Experiment:** [CONTINUOUS ASSESSMENT 9 – STM32 UART Command Controlled LED](../README.md)
 
 ---
 
-## TASK 9A Basic UART Communication
-
-### 1. Circuit Diagram
-
-The STM32 communicates with a PC terminal through a USB-to-TTL serial converter.
+### 1. Hardware Used
 
 - **Development Board:** STM32 Blue Pill
 - **Microcontroller IC:** STM32F103C6T6A (ARM Cortex-M3, 72 MHz)
@@ -22,7 +12,7 @@ The STM32 communicates with a PC terminal through a USB-to-TTL serial converter.
 - **Peripherals:** USB-to-TTL (3.3 V) serial converter connected to the PC running PuTTY
 - **Power Supply:** 3.3 V from the board; converter GND connected to board GND
 
-![Circuit Diagram](../circuit.png)
+Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 ### 2. Core Logic / Pseudocode / Code Base
 
