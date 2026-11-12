@@ -1,0 +1,75 @@
+[
+  {
+    "id": "c10etab",
+    "type": "tab",
+    "label": "CAT10C STM32 HTTP Client",
+    "disabled": false,
+    "info": "Node-RED as a second HTTP client of the STM32/ESP8266 HTTP server."
+  },
+  {
+    "id": "c10einject",
+    "type": "inject",
+    "z": "c10etab",
+    "name": "Trigger request",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 140,
+    "y": 100,
+    "wires": [
+      [
+        "c10ehttp"
+      ]
+    ]
+  },
+  {
+    "id": "c10ehttp",
+    "type": "http request",
+    "z": "c10etab",
+    "name": "GET STM32 IoT Node",
+    "method": "GET",
+    "ret": "txt",
+    "paytoqs": "ignore",
+    "url": "http://<ESP8266_IP>/",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "insecureHTTPParser": false,
+    "authType": "",
+    "senderr": false,
+    "headers": [],
+    "x": 350,
+    "y": 100,
+    "wires": [
+      [
+        "c10edebug"
+      ]
+    ]
+  },
+  {
+    "id": "c10edebug",
+    "type": "debug",
+    "z": "c10etab",
+    "name": "STM32 response",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 570,
+    "y": 100,
+    "wires": []
+  }
+]

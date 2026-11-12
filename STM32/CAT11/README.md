@@ -14,7 +14,7 @@
 
 ### 1. Circuit Diagram
 
-The experiment uses the onboard LED and the onboard user button of the NUCLEO-F401RE.
+The experiment uses the onboard LED of the NUCLEO-F401RE.
 
 - **Development Board:** NUCLEO-F401RE
 - **Microcontroller IC:** STM32F401RET6 (ARM Cortex-M4 with FPU, 84 MHz)
@@ -28,20 +28,21 @@ The experiment uses the onboard LED and the onboard user button of the NUCLEO-F4
 
 **Working Principle:**
 
-The NUCLEO-F401RE has no crystal for the STM32; it receives an 8 MHz clock from the onboard ST-LINK, so CubeMX sets the HSE to bypass mode. The PLL (PLLM ÷4, PLLN ×84, PLLP ÷2) raises this to the 84 MHz maximum system clock. PA5 is configured as a push-pull output to drive LD2. In blinking mode the LED is toggled at a fixed 200 ms interval using the HAL millisecond tick.
+The NUCLEO-F401RE has no crystal for the STM32; it receives an 8 MHz clock from the onboard ST-LINK, so CubeMX sets the HSE to bypass mode. The PLL (PLLM ÷4, PLLN ×84, PLLP ÷2) raises this to the 84 MHz maximum system clock. PA5 is configured as a push-pull output to drive LD2, and the LED is toggled every 500 ms using `HAL_Delay()`, so it blinks at a fixed 1 Hz.
 
 **Pseudocode:**
 
 1. Initialize the HAL library and configure the 84 MHz system clock.
 2. Configure PA5 as output and turn LD2 OFF.
-3. When blinking mode is on, check `HAL_GetTick()` on every loop.
-4. If 200 ms have passed since the last toggle, toggle PA5 and record the time.
+3. Toggle PA5.
+4. Wait 500 ms.
 5. Repeat continuously.
 
 **Code Base:**
 
+- **Project folder:** [`TASK11A`](TASK11A/)
 - `HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5)` toggles LD2.
-- `HAL_GetTick()` compared with `blink_t` gives the fixed 200 ms interval without `HAL_Delay()`.
+- `HAL_Delay(500)` sets the fixed blink interval (based on the 1 ms SysTick).
 
 ### 3. Inference
 
@@ -72,12 +73,13 @@ PC13 is configured as an input with pull-up, so B1 reads HIGH when released and 
 1. Configure PC13 as input with pull-up and PA5 as output.
 2. On a press edge (HIGH → LOW), record the press time.
 3. On a release edge (LOW → HIGH), calculate the press duration.
-4. If the duration is at least 30 ms (and below the long-press limit), toggle LD2.
+4. If the duration is at least 30 ms, toggle LD2; shorter pulses are ignored as bounce.
 5. Keep the LED in its new state until the next valid press.
 6. Repeat continuously.
 
 **Code Base:**
 
+- **Project folder:** [`TASK11B`](TASK11B/)
 - `HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)` reads B1.
 - `prev` stores the previous button state for edge detection and `press_t` the press time.
 - `HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5)` toggles LD2.
@@ -125,6 +127,7 @@ The duration of each press is measured with `HAL_GetTick()` time stamps, without
 
 **Code Base:**
 
+- **Project folder:** [`TASK11C`](TASK11C/)
 - `blink` holds the blinking mode, `press_t` the press start time and `blink_t` the last blink toggle time.
 - Unsigned subtraction `now - press_t` gives the correct duration even when the tick counter wraps around.
 

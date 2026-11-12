@@ -1,0 +1,113 @@
+[
+  {
+    "id": "c12tab",
+    "type": "tab",
+    "label": "CAT12 BME280 Statistics",
+    "disabled": false,
+    "info": "Polls the STM32/ESP8266 HTTP server and computes min / max / average of the BME280 readings."
+  },
+  {
+    "id": "c12inject",
+    "type": "inject",
+    "z": "c12tab",
+    "name": "Every 5 s",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "5",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "2",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 130,
+    "y": 100,
+    "wires": [
+      [
+        "c12http"
+      ]
+    ]
+  },
+  {
+    "id": "c12http",
+    "type": "http request",
+    "z": "c12tab",
+    "name": "GET STM32 BME280",
+    "method": "GET",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "http://<ESP8266_IP>/",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "insecureHTTPParser": false,
+    "authType": "",
+    "senderr": false,
+    "headers": [],
+    "x": 330,
+    "y": 100,
+    "wires": [
+      [
+        "c12stats",
+        "c12raw"
+      ]
+    ]
+  },
+  {
+    "id": "c12stats",
+    "type": "function",
+    "z": "c12tab",
+    "name": "Min / Max / Average",
+    "func": "// Running min / max / average of the BME280 readings served by the STM32\nconst d = msg.payload;\nif (!d || d.status !== \"success\") {\n    return null;\n}\nconst stats = context.get(\"stats\") || {};\nfor (const key of [\"temperature\", \"humidity\", \"pressure\"]) {\n    const v = Number(d[key]);\n    const s = stats[key] || { min: v, max: v, sum: 0, n: 0 };\n    s.min = Math.min(s.min, v);\n    s.max = Math.max(s.max, v);\n    s.sum += v;\n    s.n += 1;\n    stats[key] = s;\n}\ncontext.set(\"stats\", stats);\n\nconst row = (name, key) => ({\n    Parameter: name,\n    Minimum: stats[key].min.toFixed(2),\n    Maximum: stats[key].max.toFixed(2),\n    Average: (stats[key].sum / stats[key].n).toFixed(2)\n});\nmsg.payload = [\n    row(\"Temperature (\u00b0C)\", \"temperature\"),\n    row(\"Humidity (%RH)\", \"humidity\"),\n    row(\"Pressure (hPa)\", \"pressure\")\n];\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 560,
+    "y": 100,
+    "wires": [
+      [
+        "c12table"
+      ]
+    ]
+  },
+  {
+    "id": "c12raw",
+    "type": "debug",
+    "z": "c12tab",
+    "name": "Raw JSON",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 540,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "c12table",
+    "type": "debug",
+    "z": "c12tab",
+    "name": "Statistics table",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 790,
+    "y": 100,
+    "wires": []
+  }
+]
