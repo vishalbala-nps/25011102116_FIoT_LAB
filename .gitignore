@@ -5,8 +5,8 @@
 !**/Objects/*.hex
 Listings/
 Output/
-DebugConfig/
-**/RTE/_*/
+**/DebugConfig/
+**/RTE/
 
 # Per-user GUI layout and debug session state (uVision 4 and 5)
 *.uvgui.*
