@@ -2,8 +2,6 @@
 
 **EXP:** CONTINUOUS ASSESSMENT 14 – IoT PROJECT
 
-**DATE:** DD/MM/YYYY
-
 **NAME OF EXP:** Server Rack Monitor – Temperature and Humidity Monitoring with STM32, ESP8266 (MQTT) and a Node-RED Dashboard
 
 **HARDWARE SETUP / PLATFORM:** CubeMX + Keil MDK-ARM / STM32CubeIDE + STM32 Development Board Blue Pill STM32F103C6T6A + DHT11 Temperature and Humidity Sensor + Wemos D1 Mini (ESP8266) Wi-Fi Module + Warning LED + Buzzer + MQTT Broker (broker.emqx.io) + Node-RED Dashboard
