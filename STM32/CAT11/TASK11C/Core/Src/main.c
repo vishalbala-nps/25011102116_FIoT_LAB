@@ -87,19 +87,22 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-
+  
   int blink = 0;
   uint8_t  prev = GPIO_PIN_SET;
   uint32_t press_t = 0;
   uint32_t blink_t = 0;
 
+  
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   while (1)
   {
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
       uint8_t  cur = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
       uint32_t now = HAL_GetTick();
 
@@ -122,8 +125,9 @@ int main(void)
           HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
           blink_t = now;
       }
+  
   }
-
+  
   /* USER CODE END 3 */
 }
 

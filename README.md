@@ -19,7 +19,7 @@ Each experiment folder (`CATn`) has a **README.md** index with the experiment de
 | [Cat 6](8051/CAT6/) | UART driver and serial debugging | SCON/TMOD, Timer 1 baud-rate generation, TI/RI flags, echo | [`TASK6A`](8051/CAT6/TASK6A/), [`TASK6B`](8051/CAT6/TASK6B/) |
 | [Cat 7](8051/CAT7/) | 16×2 LCD driver, dynamic display and keypad control | HD44780 4-bit interface, DDRAM addressing, keypad scanning | [`TASK7A`](8051/CAT7/TASK7A/), [`TASK7B`](8051/CAT7/TASK7B/), [`TASK7C`](8051/CAT7/TASK7C/) |
 
-### STM32 – STM32CubeMX + HAL, STM32CubeIDE
+### STM32 – STM32CubeMX + HAL, Keil MDK-ARM / STM32CubeIDE
 
 | # | Experiment | Board | Key concepts | Project |
 |---|---|---|---|---|
@@ -46,7 +46,9 @@ Each experiment folder (`CATn`) has a **README.md** index with the experiment de
 | Tool | Used for |
 |---|---|
 | **Keil µVision 5** with the C51 compiler | 8051 projects (`.uvproj`) |
-| **STM32CubeIDE** with STM32CubeMX | STM32 projects (`.ioc`, `.project`, `.cproject`) |
+| **STM32CubeMX** | STM32 pin, clock and peripheral configuration (`.ioc`) and code generation |
+| **Keil MDK-ARM (µVision 5)** | STM32 projects (`MDK-ARM/*.uvprojx`) |
+| **STM32CubeIDE** | STM32 projects (`.project`, `.cproject`), alternative to Keil MDK-ARM |
 | STM32Cube HAL (FW_F1, FW_F4) | STM32 peripheral drivers (in each project's `Drivers/` folder) |
 | Bosch Sensortec BME280 Sensor API v3.5.1 | BME280 driver (Cat 12, Cat 13) |
 | PuTTY | Serial terminal |
@@ -54,12 +56,13 @@ Each experiment folder (`CATn`) has a **README.md** index with the experiment de
 ## Repository Layout
 
 ```
-CatN/
-├── README.md             experiment write-up
-└── <project>/            Keil µVision or STM32CubeIDE project
-    ├── *.c / Core/       source code
-    ├── *.uvproj / *.ioc  project / CubeMX configuration
-    └── Objects/*.hex     (8051 only) built HEX file, ready to flash
+<platform>/CATn/
+├── README.md                 experiment index: details, date, overview, circuit, task table
+├── circuit.png               circuit diagram
+└── TASKnX/                   one folder per task
+    ├── README.md             task details: hardware, logic, pseudocode, code, inference
+    ├── 8051:  *.c, *.uvproj, STARTUP.A51, Objects/*.hex
+    └── STM32: *.ioc, Core/, Drivers/, MDK-ARM/*.uvprojx + startup_*.s, .project / .cproject
 ```
 
 Build output is not committed (see [.gitignore](.gitignore)): Keil's `Listings/` and the rest of `Objects/`, STM32CubeIDE's `Debug/` and `Release/`, and per-user IDE files. The 8051 projects keep their `.hex` file so they can be flashed without rebuilding.
@@ -67,5 +70,7 @@ Build output is not committed (see [.gitignore](.gitignore)): Keil's `Listings/`
 ## Building
 
 **8051 (Keil µVision):** open the experiment's `.uvproj` file and choose **Project → Build Target (F7)**. The HEX file is written to the project's `Objects/` folder. Flash it to the AT89S52 with an ISP programmer.
+
+**STM32 (Keil MDK-ARM):** open the task's `MDK-ARM/<task>.uvprojx` in Keil µVision 5 and choose **Project → Build Target (F7)**, then **Flash → Download** through the ST-Link.
 
 **STM32 (STM32CubeIDE):** choose **File → Import → General → Existing Projects into Workspace**, select the experiment's project folder, then **Project → Build Project**. Flash and debug with **Run → Debug** through the ST-Link. For the Wi-Fi experiments (Cat 10, Cat 12, Cat 13), set your own Wi-Fi network name and password in `main.c` first.

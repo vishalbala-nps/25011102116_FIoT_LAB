@@ -18,11 +18,11 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "ESPLib.h"
-#include "bme280.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "ESPLib.h"
+#include "bme280.h"
 struct bme280_dev dev;
 struct bme280_settings settings;
 struct bme280_data comp_data;
@@ -149,6 +149,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
 	  /*MQTT_publishTopic("mytopic", "hi titus", QoS0);*/
 		rslt = bme280_get_sensor_data(BME280_ALL, &comp_data, &dev);
 	    if (rslt == BME280_OK)
@@ -161,8 +163,9 @@ int main(void)
 	      MQTT_publishTopic("stm32/bme280", buf, QoS0);
 	    }
 	  HAL_Delay(1000);
-    /* USER CODE BEGIN 3 */
+    
   }
+  
   /* USER CODE END 3 */
 }
 

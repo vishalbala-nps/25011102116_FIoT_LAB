@@ -18,7 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include <string.h>
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <string.h>
@@ -92,11 +92,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+  
   char buf[128];
   int lastInd = 0;
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
@@ -111,8 +107,16 @@ int main(void)
   sendString("HELLO\r\nWORLD\r\n");   // Test 4: two separate lines
 
   uint8_t ch;
+  
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   while (1)
   {
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
 	  if (HAL_UART_Receive(&huart2, &ch, 1, HAL_MAX_DELAY) == HAL_OK) {
 		  HAL_UART_Transmit(&huart2, &ch, 1, HAL_MAX_DELAY);
 		  if (ch == '\r' || ch == '\n') {
@@ -134,7 +138,9 @@ int main(void)
 			  buf[lastInd++] = ch;
 		  }
 	  }
+  
   }
+  
   /* USER CODE END 3 */
 }
 
