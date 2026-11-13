@@ -175,23 +175,6 @@ int getIP(UART_HandleTypeDef *huart, char* ipBuf,int ipBufSize) {
 	return ret;
 }
 
-// Send an AT command to the Wemos and show the exchange on the PC terminal
-char atResponse[1024];
-int showATCommand(char atCMD[]) {
-	char line[128];
-	snprintf(line, sizeof(line), ">> %s", atCMD);
-	sendUART(&huart2, line);
-	int ret = sendATCommand(&huart1, atCMD, atResponse, sizeof(atResponse));
-	char *start = atResponse;
-	char *end;
-	while ((end = strstr(start, "\r\n")) != NULL) {
-		*end = '\0';
-		snprintf(line, sizeof(line), "<< %.120s", start);
-		sendUART(&huart2, line);
-		start = end + 2;
-	}
-	return ret;
-}
 /* USER CODE END 0 */
 
 /**
@@ -246,15 +229,6 @@ int main(void)
 	  getMAC(&huart1, addr, sizeof(addr));
 	  snprintf(buf, sizeof(buf), "MAC Address: %s", addr);
 	  sendUART(&huart2, buf);
-
-	  // Configure the ESP8266 as a TCP server
-	  showATCommand("AT");
-	  showATCommand("AT+CIPMUX=1");
-	  if (showATCommand("AT+CIPSERVER=1,80")) {
-		  sendUART(&huart2, "TCP server started on port 80");
-	  } else {
-		  sendUART(&huart2, "Failed to start TCP server");
-	  }
   } else {
 	  sendUART(&huart2, "Failed to connect to wifi");
   }

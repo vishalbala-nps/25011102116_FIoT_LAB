@@ -4,27 +4,25 @@
 
 **DATE:** DD/MM/YYYY
 
-**NAME OF EXP:** BME280 Sensor Interfacing Using I²C and Bosch Sensor API
+**NAME OF EXP:** STM32F401RE Cortex-M4: GPIO and User Input Programming
 
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Nucleo Development Board NUCLEO-F401RE (STM32F401RET6) + Bosch BME280 Sensor + Wemos D1 Mini (ESP8266) Wi-Fi Module + USB-to-TTL Serial Converter
+**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Nucleo Development Board NUCLEO-F401RE (STM32F401RET6)
 
 ---
 
 ## Overview
 
-Interface a BME280 environmental sensor with the NUCLEO-F401RE over I²C using the official Bosch Sensortec BME280 Sensor API, obtain compensated temperature, pressure and humidity, serve them as JSON over HTTP through an ESP8266, and analyse them in Node-RED.
+Bring up the NUCLEO-F401RE (Cortex-M4) and program its GPIO with CubeMX and the HAL library, using the on-board LED LD2 (PA5) and user button B1 (PC13). The clock tree is configured for 84 MHz from the ST-LINK's 8 MHz clock (HSE bypass).
 
-**Expected outcome:** Compensated readings appear on the UART terminal, a browser receives them as JSON, and Node-RED computes their minimum, maximum and average.
+**Expected outcome:** The on-board LED blinks, toggles with the user button and remembers its state, and reacts differently to short and long button presses.
 
 ## Circuit Diagram
 
 - **Development Board:** NUCLEO-F401RE
-- **Microcontroller IC:** STM32F401RET6
-- **I²C Pins:** PB6 (SCL), PB7 (SDA) → BME280
-- **UART1 Pins (Wemos):** PA9 (USART1_TX) → Wemos RX, PA10 (USART1_RX) ← Wemos TX
-- **UART6 Pins (PC):** PC6 (USART6_TX) → converter RX, PC7 (USART6_RX) ← converter TX
-- **Peripherals:** BME280, Wemos D1 Mini (ESP8266) running AT firmware, USB-to-TTL converter to PuTTY
-- **Power Supply:** BME280 from 3.3 V, Wemos from 5 V, common GND
+- **Microcontroller IC:** STM32F401RET6 (ARM Cortex-M4 with FPU, 84 MHz)
+- **GPIO Pin:** PA5 (output, push-pull)
+- **Peripheral:** Onboard green LED LD2 (active-high)
+- **Power Supply:** 5 V over the ST-LINK USB connector
 
 ![Circuit Diagram](circuit.png)
 
@@ -32,8 +30,8 @@ Interface a BME280 environmental sensor with the NUCLEO-F401RE over I²C using t
 
 | Task | What it does | Outcome |
 |---|---|---|
-| [TASK 12A BME280 Sensor Interfacing Using I²C and Bosch Sensor API](TASK12A/) | Reads the chip ID and prints compensated T / P / H over UART every second | `Temperature : XX.XX °C`, `Pressure : XXXX.XX hPa`, `Humidity : XX.XX %RH` |
-| [TASK 12B Raw HTTP Response with BME280 Data](TASK12B/) | ESP8266 HTTP server answers `GET /` with the readings as JSON (`application/json`) | Browser shows `{"status":"success",…}` |
-| [TASK 12C Node-RED Statistics of the BME280 Data](TASK12C/) | Node-RED polls the server and computes running min / max / average | Statistics table of the BME280 data |
+| [TASK 12A On-board LED Bring-Up](TASK12A/) | Blinks LD2 at a fixed 500 ms interval | Board, clock and GPIO output verified |
+| [TASK 12B On-board Switch Control with State Remembrance](TASK12B/) | Each valid B1 press toggles LD2; the LED keeps its state after release | Button control with state remembrance |
+| [TASK 12C Short-Press and Long-Press Detection](TASK12C/) | Short press toggles LD2; long press (≥ 500 ms) starts / stops blinking | Short and long presses distinguished |
 
 Each task folder contains its STM32CubeMX / STM32CubeIDE project and a README with the task's hardware, core logic, pseudocode, code base and inference.

@@ -21,9 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "bme280.h"
-#include <stdio.h>
-#include <string.h>
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,43 +40,21 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-I2C_HandleTypeDef hi2c1;
-
-UART_HandleTypeDef huart1;
-UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
-struct bme280_dev dev;
-struct bme280_settings settings;
-struct bme280_data comp_data;
-int8_t rslt = BME280_OK;
 
-// I2C address of the sensor: 0x76 (SDO low). Change to BME280_I2C_ADDR_SEC (0x77) if SDO is high.
-static uint8_t dev_addr = BME280_I2C_ADDR_PRIM;
-
-// Final values -- watch these in the Live Expressions view
-float temperature, pressure, humidity;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_I2C1_Init(void);
-static void MX_USART1_UART_Init(void);
-static void MX_USART6_UART_Init(void);
 /* USER CODE BEGIN PFP */
-int8_t user_i2c_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *intf_ptr);
-int8_t user_i2c_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len, void *intf_ptr);
-void user_delay_us(uint32_t period, void *intf_ptr);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-// UART Related
-void sendUART(UART_HandleTypeDef *huart, char inp[]) {
-    HAL_UART_Transmit(huart, (uint8_t *)inp, strlen(inp), HAL_MAX_DELAY);
-    HAL_UART_Transmit(huart, (uint8_t *)"\r\n", 2, HAL_MAX_DELAY);
-}
+
 /* USER CODE END 0 */
 
 /**
@@ -110,42 +86,8 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_I2C1_Init();
-  MX_USART1_UART_Init();
-  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
-  char line[64];
 
-  // Tell the Bosch driver how to talk to the sensor
-  dev.intf_ptr = &dev_addr;
-  dev.intf     = BME280_I2C_INTF;
-  dev.read     = user_i2c_read;
-  dev.write    = user_i2c_write;
-  dev.delay_us = user_delay_us;
-
-  // Checks the chip ID (register 0xD0) and reads the calibration data
-  rslt = bme280_init(&dev);
-  if (rslt != BME280_OK) {
-	  sendUART(&huart6, "BME280 not found (chip ID check failed)");
-	  Error_Handler();
-  }
-  snprintf(line, sizeof(line), "BME280 chip ID : 0x%02X", dev.chip_id);
-  sendUART(&huart6, line);
-
-  // Configure oversampling, filter and standby time
-  rslt = bme280_get_sensor_settings(&settings, &dev);
-  settings.osr_h        = BME280_OVERSAMPLING_2X;
-  settings.osr_p        = BME280_OVERSAMPLING_2X;
-  settings.osr_t        = BME280_OVERSAMPLING_2X;
-  settings.filter       = BME280_FILTER_COEFF_OFF;
-
-  rslt = bme280_set_sensor_settings(BME280_SEL_ALL_SETTINGS, &settings, &dev);
-  if (rslt != BME280_OK) Error_Handler();
-
-  // Normal mode: the sensor measures continuously on its own
-  rslt = bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &dev);
-  if (rslt != BME280_OK) Error_Handler();
-  sendUART(&huart6, "BME280 configured");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -155,22 +97,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	rslt = bme280_get_sensor_data(BME280_ALL, &comp_data, &dev);
-	if (rslt == BME280_OK)
-	{
-	  temperature = comp_data.temperature;        // deg C
-	  pressure    = comp_data.pressure / 100.0f;  // Pa -> hPa
-	  humidity    = comp_data.humidity;           // % RH
-
-	  snprintf(line, sizeof(line), "Temperature : %.2f °C", temperature);
-	  sendUART(&huart6, line);
-	  snprintf(line, sizeof(line), "Pressure    : %.2f hPa", pressure);
-	  sendUART(&huart6, line);
-	  snprintf(line, sizeof(line), "Humidity    : %.2f %%RH", humidity);
-	  sendUART(&huart6, line);
-	  sendUART(&huart6, "");
-	}
-	HAL_Delay(1000);  // read once per second
+      // Blink LD2 (PA5) at a fixed 500 ms interval
+      HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+      HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
@@ -221,121 +150,37 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief I2C1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_I2C1_Init(void)
-{
-
-  /* USER CODE BEGIN I2C1_Init 0 */
-
-  /* USER CODE END I2C1_Init 0 */
-
-  /* USER CODE BEGIN I2C1_Init 1 */
-
-  /* USER CODE END I2C1_Init 1 */
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
-  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN I2C1_Init 2 */
-
-  /* USER CODE END I2C1_Init 2 */
-
-}
-
-/**
-  * @brief USART1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART1_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART1_Init 0 */
-
-  /* USER CODE END USART1_Init 0 */
-
-  /* USER CODE BEGIN USART1_Init 1 */
-
-  /* USER CODE END USART1_Init 1 */
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART1_Init 2 */
-
-  /* USER CODE END USART1_Init 2 */
-
-}
-
-/**
-  * @brief USART6 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART6_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART6_Init 0 */
-
-  /* USER CODE END USART6_Init 0 */
-
-  /* USER CODE BEGIN USART6_Init 1 */
-
-  /* USER CODE END USART6_Init 1 */
-  huart6.Instance = USART6;
-  huart6.Init.BaudRate = 115200;
-  huart6.Init.WordLength = UART_WORDLENGTH_8B;
-  huart6.Init.StopBits = UART_STOPBITS_1;
-  huart6.Init.Parity = UART_PARITY_NONE;
-  huart6.Init.Mode = UART_MODE_TX_RX;
-  huart6.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart6.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart6) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART6_Init 2 */
-
-  /* USER CODE END USART6_Init 2 */
-
-}
-
-/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* USER CODE BEGIN MX_GPIO_Init_1 */
 
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PC13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA5 */
+  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
@@ -343,35 +188,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-int8_t user_i2c_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *intf_ptr)
-{
-  uint8_t addr = *(uint8_t *)intf_ptr;
-  // HAL expects the 7-bit address shifted left by 1
-  if (HAL_I2C_Mem_Read(&hi2c1, (uint16_t)(addr << 1), reg_addr, I2C_MEMADD_SIZE_8BIT,
-                       reg_data, (uint16_t)len, HAL_MAX_DELAY) == HAL_OK)
-  {
-    return BME280_OK;
-  }
-  return BME280_E_COMM_FAIL;
-}
 
-int8_t user_i2c_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len, void *intf_ptr)
-{
-  uint8_t addr = *(uint8_t *)intf_ptr;
-  if (HAL_I2C_Mem_Write(&hi2c1, (uint16_t)(addr << 1), reg_addr, I2C_MEMADD_SIZE_8BIT,
-                        (uint8_t *)reg_data, (uint16_t)len, HAL_MAX_DELAY) == HAL_OK)
-  {
-    return BME280_OK;
-  }
-  return BME280_E_COMM_FAIL;
-}
-
-void user_delay_us(uint32_t period, void *intf_ptr)
-{
-  // HAL only has a millisecond delay, so round microseconds up to the next ms
-  (void)intf_ptr;
-  HAL_Delay((period / 1000) + 1);
-}
 /* USER CODE END 4 */
 
 /**

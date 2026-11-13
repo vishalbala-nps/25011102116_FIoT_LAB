@@ -21,23 +21,20 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "DHT11.h"
 #include "ESPLib.h"
-#include <string.h>
+#include "bme280.h"
+struct bme280_dev dev;
+struct bme280_settings settings;
+struct bme280_data comp_data;
+int8_t rslt = BME280_OK;
+static uint8_t dev_addr = BME280_I2C_ADDR_PRIM;
+
+float temperature, pressure, humidity;
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define WIFI_SSID "SNUC"
-#define WIFI_PASSWORD "snu12345"
 
-//#define MQTT_BROKER "192.168.1.72"
-#define MQTT_BROKER "broker.emqx.io"
-#define CLIENT_ID "VISHAL_STM32"
-
-#define WARNING_ENABLE 1
-#define TEMP_ALARM 2000
-#define WARNING_TEMP 30
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -53,70 +50,27 @@
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
 
-TIM_HandleTypeDef htim2;
-
 UART_HandleTypeDef huart1;
+UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
-DHT11_HandleTypeDef dht;
-float temperature = 0.0f;
-float humidity = 0.0f;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_TIM2_Init(void);
-static void MX_USART1_UART_Init(void);
 static void MX_I2C1_Init(void);
+static void MX_USART1_UART_Init(void);
+static void MX_USART6_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
+int8_t user_i2c_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *intf_ptr);
+int8_t user_i2c_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len, void *intf_ptr);
+void user_delay_us(uint32_t period, void *intf_ptr);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-//Generics
-void initSensor() {
-	//DHT11
-	DHT11_Init(&dht, &htim2, GPIOB, GPIO_PIN_15);
-}
-
-uint8_t readSensor() {
-	return DHT11_Read(&dht);
-}
-
-//Status LED
-void statusLedOn() {
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-}
-
-void statusLedOff() {
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-}
-
-void blinkStatusLED() {
-	statusLedOff();
-	HAL_Delay(500);
-	statusLedOn();
-}
-
-//Warning LED
-void warningLedOn() {
-	if (WARNING_ENABLE) HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_SET);
-}
-
-void warningLedOff() {
-	HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_RESET);
-}
-
-void beepBuzzer() {
-	if (WARNING_ENABLE) {
-		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_6,GPIO_PIN_SET);
-		HAL_Delay(200);
-		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_6,GPIO_PIN_RESET);
-	}
-}
 
 /* USER CODE END 0 */
 
@@ -149,58 +103,69 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_TIM2_Init();
-  MX_USART1_UART_Init();
   MX_I2C1_Init();
+  MX_USART1_UART_Init();
+  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
-  int beep = 0;
-  uint32_t last_beep = 0;
-  statusLedOff();
-  initSensor();
 
+  //MQTT
   ESP8266_Init(StationMode, huart1);
-  ESP8266_wifiConnect(WIFI_SSID, WIFI_PASSWORD);
-  ESP8266_portConnect("TCP", MQTT_BROKER, "1883");
+  ESP8266_wifiConnect("SNUC", "snu12345");
+  ESP8266_portConnect("TCP", "broker.emqx.io", "1883");
 
-  MQTT_InitTypeDef_t mqtt;
-  mqtt.clientID = CLIENT_ID;
-  mqtt.connectFlag = CleanSession;
-  mqtt.keepAlive = 500;
+  MQTT_InitTypeDef_t mqttSetting;
+  mqttSetting.keepAlive = 500;
+  mqttSetting.connectFlag = CleanSession;
+  mqttSetting.clientID = "STM32_Publisher_vishalbala";
+  MQTT_connectBroker(&mqttSetting);
 
-  MQTT_connectBroker(&mqtt);
-  statusLedOn();
+  //BME280
+  dev.intf_ptr = &dev_addr;
+  dev.intf     = BME280_I2C_INTF;
+  dev.read     = user_i2c_read;
+  dev.write    = user_i2c_write;
+  dev.delay_us = user_delay_us;
+
+  rslt = bme280_init(&dev);
+  if (rslt != BME280_OK) Error_Handler();
+
+  rslt = bme280_get_sensor_settings(&settings, &dev);
+  settings.osr_h        = BME280_OVERSAMPLING_2X;
+  settings.osr_p        = BME280_OVERSAMPLING_2X;
+  settings.osr_t        = BME280_OVERSAMPLING_2X;
+  settings.filter       = BME280_FILTER_COEFF_OFF;
+
+  rslt = bme280_set_sensor_settings(BME280_SEL_ALL_SETTINGS, &settings, &dev);
+  if (rslt != BME280_OK) Error_Handler();
+
+  rslt = bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &dev);
+  if (rslt != BME280_OK) Error_Handler();
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	uint32_t now = HAL_GetTick();
-	if (readSensor()) {
-		temperature = dht.temperature;
-		humidity = dht.humidity;
-		if (temperature >= WARNING_TEMP) {
-			warningLedOn();
-			beep = 1;
-
-		} else {
-			warningLedOff();
-			beep = 0;
-		}
-		char buf[128];
-		snprintf(buf,sizeof(buf),"{\"t\":%.2f,\"h\":%.2f}",temperature,humidity);
-		MQTT_publishTopic("rack1/readings", buf, 0);
-		blinkStatusLED();
-		if (beep && ((now-last_beep) >= TEMP_ALARM)) {
-			last_beep = HAL_GetTick();
-			beepBuzzer();
-		}
-	}
-	HAL_Delay(1500);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  /*MQTT_publishTopic("mytopic", "hi titus", QoS0);*/
+		rslt = bme280_get_sensor_data(BME280_ALL, &comp_data, &dev);
+	    if (rslt == BME280_OK)
+	    {
+	      temperature = comp_data.temperature;        // deg C
+	      pressure    = comp_data.pressure / 100.0f;  // Pa -> hPa
+	      humidity    = comp_data.humidity;          // % RH
+	      char buf[128];
+	      snprintf(buf, sizeof buf, "{\"t\":%.1f,\"p\":%.1f,\"h\":%.1f}", temperature, pressure, humidity);
+	      MQTT_publishTopic("stm32/bme280", buf, QoS0);
+	    }
+	  HAL_Delay(1000);
+    
   }
+  
   /* USER CODE END 3 */
 }
 
@@ -213,16 +178,22 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
+  /** Configure the main internal regulator output voltage
+  */
+  __HAL_RCC_PWR_CLK_ENABLE();
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
+
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 84;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLQ = 4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -278,51 +249,6 @@ static void MX_I2C1_Init(void)
 }
 
 /**
-  * @brief TIM2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM2_Init(void)
-{
-
-  /* USER CODE BEGIN TIM2_Init 0 */
-
-  /* USER CODE END TIM2_Init 0 */
-
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM2_Init 1 */
-
-  /* USER CODE END TIM2_Init 1 */
-  htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 71;
-  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 65535;
-  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM2_Init 2 */
-
-  /* USER CODE END TIM2_Init 2 */
-
-}
-
-/**
   * @brief USART1 Initialization Function
   * @param None
   * @retval None
@@ -356,52 +282,54 @@ static void MX_USART1_UART_Init(void)
 }
 
 /**
+  * @brief USART6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART6_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART6_Init 0 */
+
+  /* USER CODE END USART6_Init 0 */
+
+  /* USER CODE BEGIN USART6_Init 1 */
+
+  /* USER CODE END USART6_Init 1 */
+  huart6.Instance = USART6;
+  huart6.Init.BaudRate = 115200;
+  huart6.Init.WordLength = UART_WORDLENGTH_8B;
+  huart6.Init.StopBits = UART_STOPBITS_1;
+  huart6.Init.Parity = UART_PARITY_NONE;
+  huart6.Init.Mode = UART_MODE_TX_RX;
+  huart6.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart6.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART6_Init 2 */
+
+  /* USER CODE END USART6_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
   */
 static void MX_GPIO_Init(void)
 {
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* USER CODE BEGIN MX_GPIO_Init_1 */
 
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_SET);
-
-  /*Configure GPIO pin : PC13 */
-  GPIO_InitStruct.Pin = GPIO_PIN_13;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PA5 PA6 */
-  GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PB15 */
-  GPIO_InitStruct.Pin = GPIO_PIN_15;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
@@ -409,7 +337,35 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+int8_t user_i2c_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *intf_ptr)
+{
+  uint8_t addr = *(uint8_t *)intf_ptr;
+  // HAL expects the 7-bit address shifted left by 1
+  if (HAL_I2C_Mem_Read(&hi2c1, (uint16_t)(addr << 1), reg_addr, I2C_MEMADD_SIZE_8BIT,
+                       reg_data, (uint16_t)len, HAL_MAX_DELAY) == HAL_OK)
+  {
+    return BME280_OK;
+  }
+  return BME280_E_COMM_FAIL;
+}
 
+int8_t user_i2c_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len, void *intf_ptr)
+{
+  uint8_t addr = *(uint8_t *)intf_ptr;
+  if (HAL_I2C_Mem_Write(&hi2c1, (uint16_t)(addr << 1), reg_addr, I2C_MEMADD_SIZE_8BIT,
+                        (uint8_t *)reg_data, (uint16_t)len, HAL_MAX_DELAY) == HAL_OK)
+  {
+    return BME280_OK;
+  }
+  return BME280_E_COMM_FAIL;
+}
+
+void user_delay_us(uint32_t period, void *intf_ptr)
+{
+  // HAL only has a millisecond delay, so round microseconds up to the next ms
+  (void)intf_ptr;
+  HAL_Delay((period / 1000) + 1);
+}
 /* USER CODE END 4 */
 
 /**

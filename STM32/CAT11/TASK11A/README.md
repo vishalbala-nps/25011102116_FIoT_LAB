@@ -1,16 +1,17 @@
-# TASK 11A On-board LED Bring-Up
+# TASK 11A Configure ESP8266 as a TCP Server
 
-**Experiment:** [CONTINUOUS ASSESSMENT 11 – STM32F401RE Cortex-M4: GPIO and User Input Programming](../README.md)
+**Experiment:** [CONTINUOUS ASSESSMENT 11 – HTTP Server - STM32–Wemos Wi-Fi Modem Using AT Commands](../README.md)
 
 ---
 
 ### 1. Hardware Used
 
-- **Development Board:** NUCLEO-F401RE
-- **Microcontroller IC:** STM32F401RET6 (ARM Cortex-M4 with FPU, 84 MHz)
-- **GPIO Pin:** PA5 (output, push-pull)
-- **Peripheral:** Onboard green LED LD2 (active-high)
-- **Power Supply:** 5 V over the ST-LINK USB connector
+- **Development Board:** STM32 Blue Pill
+- **Microcontroller IC:** STM32F103C8T6 (ARM Cortex-M3, 72 MHz)
+- **UART1 Pins (Wemos):** PA9 (USART1_TX) → Wemos RX, PA10 (USART1_RX) ← Wemos TX
+- **UART2 Pins (PC):** PA2 (USART2_TX) → converter RX, PA3 (USART2_RX) ← converter TX
+- **Peripherals:** Wemos D1 Mini (ESP8266) running AT firmware, USB-to-TTL (3.3 V) converter to PuTTY, Wi-Fi access point
+- **Power Supply:** Wemos powered from 5 V; STM32, Wemos and converter share a common GND
 
 Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
@@ -18,21 +19,41 @@ Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 **Working Principle:**
 
-The NUCLEO-F401RE has no crystal for the STM32; it receives an 8 MHz clock from the onboard ST-LINK, so CubeMX sets the HSE to bypass mode. The PLL (PLLM ÷4, PLLN ×84, PLLP ÷2) raises this to the 84 MHz maximum system clock. PA5 is configured as a push-pull output to drive LD2, and the LED is toggled every 500 ms using `HAL_Delay()`, so it blinks at a fixed 1 Hz.
+The STM32 first configures the ESP8266 as a Wi-Fi station and connects it to the network, then configures it as a TCP server with the three commands of Task 11A: `AT` (check the modem), `AT+CIPMUX=1` (allow multiple connections) and `AT+CIPSERVER=1,80` (listen on port 80). Every command and the ESP8266 response are shown on the PC terminal.
 
 **Pseudocode:**
 
-1. Initialize the HAL library and configure the 84 MHz system clock.
-2. Configure PA5 as output and turn LD2 OFF.
-3. Toggle PA5.
-4. Wait 500 ms.
-5. Repeat continuously.
+1. Initialize HAL, the system clock, USART1 (Wemos) and USART2 (PC).
+2. Wait for the ESP8266 to boot, turn echo off (`ATE0`) and check it with `AT`.
+3. Set station mode (`AT+CWMODE=1`) and join the access point (`AT+CWJAP="<ssid>","<password>"`).
+4. Read the IP and MAC address with `AT+CIFSR` and print them.
+5. Send `AT`, `AT+CIPMUX=1` and `AT+CIPSERVER=1,80`, printing each command as `>> <command>` and each response line as `<< <line>`.
+6. Report whether the TCP server started on port 80.
 
 **Code Base:**
 
-- `HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5)` toggles LD2.
-- `HAL_Delay(500)` sets the fixed blink interval (based on the 1 ms SysTick).
+- `initWifi()`, `setMode()`, `joinAP()`, `getIP()` and `getMAC()` connect the Wemos to Wi-Fi and read its addresses (from the ESP8266 functions of the BME280 HTTP experiment).
+- `sendATCommand()` sends a command and collects the response until `OK`, `ERROR` or `FAIL`.
+- `showATCommand()` prints the command and its response on the PC terminal.
+
+**PC Terminal Output:**
+
+```
+Initializing Wifi...
+Initialized Wifi
+Connecting to Wifi...
+Connected to Wifi Successfully
+IP Address: xxx.xxx.xxx.xxx
+MAC Address: xx:xx:xx:xx:xx:xx
+>> AT
+<< OK
+>> AT+CIPMUX=1
+<< OK
+>> AT+CIPSERVER=1,80
+<< OK
+TCP server started on port 80
+```
 
 ### 3. Inference
 
-LD2 blinks at a fixed interval, verifying the NUCLEO-F401RE hardware, the clock configuration and the GPIO output configuration.
+The ESP8266 joins the Wi-Fi network as a station and, with `AT+CIPMUX=1` and `AT+CIPSERVER=1,80`, accepts TCP connections on port 80. Configuring the Wi-Fi modem as a server needs only AT commands sent over the UART.

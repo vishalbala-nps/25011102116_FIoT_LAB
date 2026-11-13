@@ -59,3 +59,5 @@ RemoteSystemsTempFiles/
 .DS_Store
 *pdf
 *docx
+evaluate.py
+__pycache__

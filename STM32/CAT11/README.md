@@ -4,25 +4,26 @@
 
 **DATE:** DD/MM/YYYY
 
-**NAME OF EXP:** STM32F401RE Cortex-M4: GPIO and User Input Programming
+**NAME OF EXP:** HTTP Server - STM32–Wemos Wi-Fi Modem Using AT Commands
 
-**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Nucleo Development Board NUCLEO-F401RE (STM32F401RET6)
+**HARDWARE SETUP / PLATFORM:** CubeMX + STM32CubeIDE + STM32 Development Board Blue Pill STM32F103C8T6 + Wemos D1 Mini (ESP8266) Wi-Fi Module + USB-to-TTL Serial Converter + PuTTY + Browser / Node-RED
 
 ---
 
 ## Overview
 
-Bring up the NUCLEO-F401RE (Cortex-M4) and program its GPIO with CubeMX and the HAL library, using the on-board LED LD2 (PA5) and user button B1 (PC13). The clock tree is configured for 84 MHz from the ST-LINK's 8 MHz clock (HSE bypass).
+Develop an STM32-based HTTP sensor node: the STM32 communicates with the ESP8266/Wemos through UART AT commands, configures the ESP8266 as a TCP server, receives an HTTP request through an `+IPD` frame, constructs an HTTP response, and transmits the response to a browser and to Node-RED. The ESP8266 / HTTP server functions are reused from the BME280 HTTP experiment (CAT13).
 
-**Expected outcome:** The on-board LED blinks, toggles with the user button and remembers its state, and reacts differently to short and long button presses.
+**Expected outcome:** A browser and a Node-RED flow both receive the "STM32 IoT Node" page served by the STM32 through the ESP8266.
 
 ## Circuit Diagram
 
-- **Development Board:** NUCLEO-F401RE
-- **Microcontroller IC:** STM32F401RET6 (ARM Cortex-M4 with FPU, 84 MHz)
-- **GPIO Pin:** PA5 (output, push-pull)
-- **Peripheral:** Onboard green LED LD2 (active-high)
-- **Power Supply:** 5 V over the ST-LINK USB connector
+- **Development Board:** STM32 Blue Pill
+- **Microcontroller IC:** STM32F103C8T6 (ARM Cortex-M3, 72 MHz)
+- **UART1 Pins (Wemos):** PA9 (USART1_TX) → Wemos RX, PA10 (USART1_RX) ← Wemos TX
+- **UART2 Pins (PC):** PA2 (USART2_TX) → converter RX, PA3 (USART2_RX) ← converter TX
+- **Peripherals:** Wemos D1 Mini (ESP8266) running AT firmware, USB-to-TTL (3.3 V) converter to PuTTY (115200-8-N-1)
+- **Power Supply:** Wemos powered from 5 V; STM32, Wemos and converter share a common GND
 
 ![Circuit Diagram](circuit.png)
 
@@ -30,8 +31,8 @@ Bring up the NUCLEO-F401RE (Cortex-M4) and program its GPIO with CubeMX and the 
 
 | Task | What it does | Outcome |
 |---|---|---|
-| [TASK 11A On-board LED Bring-Up](TASK11A/) | Blinks LD2 at a fixed 500 ms interval | Board, clock and GPIO output verified |
-| [TASK 11B On-board Switch Control with State Remembrance](TASK11B/) | Each valid B1 press toggles LD2; the LED keeps its state after release | Button control with state remembrance |
-| [TASK 11C Short-Press and Long-Press Detection](TASK11C/) | Short press toggles LD2; long press (≥ 500 ms) starts / stops blinking | Short and long presses distinguished |
+| [TASK 11A Configure ESP8266 as a TCP Server](TASK11A/) | Joins Wi-Fi, prints the IP / MAC, then sends `AT`, `AT+CIPMUX=1`, `AT+CIPSERVER=1,80` | TCP server listening on port 80 |
+| [TASK 11B Observe the HTTP Request and Construct a Static HTTP Response](TASK11B/) | Prints the `+IPD` request and answers `GET /` with a static HTML page using a two-step `AT+CIPSEND` | Browser shows the STM32 IoT Node page |
+| [TASK 11C Node-RED as a Second HTTP Client](TASK11C/) | Node-RED Inject → HTTP Request → Debug flow queries the STM32 server | Node-RED receives the same HTTP response |
 
-Each task folder contains its STM32CubeMX / STM32CubeIDE project and a README with the task's hardware, core logic, pseudocode, code base and inference.
+Each task folder contains its STM32CubeMX / Keil MDK-ARM / STM32CubeIDE project and a README with the task's hardware, core logic, pseudocode, code base and inference.

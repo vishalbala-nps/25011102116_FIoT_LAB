@@ -1,6 +1,6 @@
-# TASK 12B Raw HTTP Response with BME280 Data
+# TASK 12B On-board Switch Control with State Remembrance
 
-**Experiment:** [CONTINUOUS ASSESSMENT 12 – BME280 Sensor Interfacing Using I²C and Bosch Sensor API](../README.md)
+**Experiment:** [CONTINUOUS ASSESSMENT 12 – STM32F401RE Cortex-M4: GPIO and User Input Programming](../README.md)
 
 ---
 
@@ -8,11 +8,9 @@
 
 - **Development Board:** NUCLEO-F401RE
 - **Microcontroller IC:** STM32F401RET6
-- **I²C Pins:** PB6 (SCL), PB7 (SDA) → BME280
-- **UART1 Pins (Wemos):** PA9 (USART1_TX) → Wemos RX, PA10 (USART1_RX) ← Wemos TX
-- **UART6 Pins (PC):** PC6 (USART6_TX) → converter RX, PC7 (USART6_RX) ← converter TX
-- **Peripherals:** BME280, Wemos D1 Mini (ESP8266) running AT firmware, USB-to-TTL converter to PuTTY
-- **Power Supply:** BME280 from 3.3 V, Wemos from 5 V, common GND
+- **GPIO Pins:** PA5 (LED output), PC13 (button input, pull-up)
+- **Peripherals:** Onboard LED LD2 (active-high), onboard blue user button B1 (active-low)
+- **Power Supply:** 5 V over the ST-LINK USB connector
 
 Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
@@ -20,43 +18,23 @@ Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 **Working Principle:**
 
-The ESP8266 joins the Wi-Fi network using AT commands and is set up as a TCP server on port 80 (`AT+CIPMUX=1`, `AT+CIPSERVER=1,80`). Bytes from the ESP8266 are received with a UART interrupt, which tracks client connections (`CONNECT`, `CLOSED`) and stores incoming requests (`+IPD`). The main loop answers each pending request with a raw HTTP response whose Content-Length is calculated from the actual body length, and sends it with `AT+CIPSEND`. A request for `/` returns the compensated BME280 readings as a JSON payload:
-
-```
-{"status":"success","temperature":28.45,"humidity":62.30,"pressure":1008.72}
-```
+PC13 is configured as an input with pull-up, so B1 reads HIGH when released and LOW when pressed. The program detects the press and release edges of B1 and toggles LD2 on a valid press. Since the LED is only changed on a toggle, it keeps (remembers) its new state after the button is released. Presses shorter than 30 ms are ignored as switch bounce.
 
 **Pseudocode:**
 
-1. Initialize the BME280 (Task 12A).
-2. Initialize the ESP8266 (`ATE0`, `AT`), set station mode and join the Wi-Fi network.
-3. Print the IP address on the PC terminal (USART6).
-4. Start the TCP server on port 80 and enable interrupt reception on USART1.
-5. In the loop:
-   - for each connection holding a request, extract the path after `GET`;
-   - if the path is `/`, build the JSON payload from the temperature, humidity and pressure, else `Page not found`;
-   - build the HTTP response with `Content-Type: application/json` and `Content-Length = strlen(json)`;
-   - send `AT+CIPSEND=<link>,<length>`, wait for `>`, send the response, wait for `SEND OK`, then `AT+CIPCLOSE=<link>`;
-   - read new sensor data.
-6. Repeat every 2 seconds.
+1. Configure PC13 as input with pull-up and PA5 as output.
+2. On a press edge (HIGH → LOW), record the press time.
+3. On a release edge (LOW → HIGH), calculate the press duration.
+4. If the duration is at least 30 ms, toggle LD2; shorter pulses are ignored as bounce.
+5. Keep the LED in its new state until the next valid press.
+6. Repeat continuously.
 
 **Code Base:**
 
-- `HAL_UART_RxCpltCallback()` builds lines from the ESP8266 and updates the `connections[]` state.
-- `handleResponse()` and `handleRouting()` extract the requested path and choose the response; the JSON payload is built with `snprintf(json, sizeof(json), "{\"status\":\"success\",\"temperature\":%.2f,…}", …)`.
-- `sendHTML(content, type, link)` builds the raw response with `snprintf()`:
-
-```
-HTTP/1.1 200 OK
-Content-Type: application/json
-Content-Length: <strlen(json)>
-Connection: close
-
-{"status":"success","temperature":28.45,"humidity":62.30,"pressure":1008.72}
-```
-
-- `onWifiDisconnect()` waits for `WIFI GOT IP` and restarts the server if the Wi-Fi connection drops.
+- `HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)` reads B1.
+- `prev` stores the previous button state for edge detection and `press_t` the press time.
+- `HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5)` toggles LD2.
 
 ### 3. Inference
 
-Opening `http://<IP Address>/` in a browser on the same network shows the temperature, humidity and pressure measured by the BME280 as JSON. The STM32 builds a valid raw HTTP response with the Content-Length calculated from the actual JSON string length and sends it through the ESP8266, showing how sensor data can be served over Wi-Fi using AT commands.
+Each valid press of B1 toggles LD2, and the LED stays in its new state after the button is released. Edge detection with a minimum press time gives one toggle per press.

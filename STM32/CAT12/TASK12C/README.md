@@ -1,6 +1,6 @@
-# TASK 12C Node-RED Statistics of the BME280 Data
+# TASK 12C Short-Press and Long-Press Detection
 
-**Experiment:** [CONTINUOUS ASSESSMENT 12 – BME280 Sensor Interfacing Using I²C and Bosch Sensor API](../README.md)
+**Experiment:** [CONTINUOUS ASSESSMENT 12 – STM32F401RE Cortex-M4: GPIO and User Input Programming](../README.md)
 
 ---
 
@@ -8,10 +8,9 @@
 
 - **Development Board:** NUCLEO-F401RE
 - **Microcontroller IC:** STM32F401RET6
-- **I²C Pins:** PB6 (SCL), PB7 (SDA) → BME280
-- **UART1 Pins (Wemos):** PA9 (USART1_TX) → Wemos RX, PA10 (USART1_RX) ← Wemos TX
-- **Peripherals:** BME280, Wemos D1 Mini (ESP8266) HTTP server, PC running Node-RED
-- **Power Supply:** BME280 from 3.3 V, Wemos from 5 V, common GND
+- **GPIO Pins:** PA5 (LED output), PC13 (button input, pull-up)
+- **Peripherals:** Onboard LED LD2, onboard user button B1
+- **Power Supply:** 5 V over the ST-LINK USB connector
 
 Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
@@ -19,27 +18,28 @@ Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 **Working Principle:**
 
-Node-RED acts as an HTTP client of the STM32/ESP8266 server. An Inject node triggers an HTTP Request node every 5 seconds, which sends `GET http://<ESP8266_IP>/` and parses the JSON response. A Function node keeps the running minimum, maximum and average of each reading in its context and outputs the statistics table.
+The duration of each press is measured with `HAL_GetTick()` time stamps, without blocking delays, and the STM32 performs a different action for each type of press:
 
-| Parameter | Minimum | Maximum | Average |
-|---|---|---|---|
-| Temperature (°C) | running min | running max | running average |
-| Humidity (%RH) | running min | running max | running average |
-| Pressure (hPa) | running min | running max | running average |
+| Press duration | Type | Action |
+|---|---|---|
+| < 30 ms | Bounce | Ignored |
+| 30 ms – 499 ms | Short press | Toggle LD2 (when not blinking) |
+| ≥ 500 ms | Long press | Turn blinking mode ON / OFF |
 
 **Pseudocode:**
 
-1. Every 5 seconds, send `GET /` to the ESP8266 IP address.
-2. Parse the JSON response; ignore it if `status` is not `success`.
-3. For each of temperature, humidity and pressure: update the minimum, maximum, sum and count.
-4. Compute the average as sum / count.
-5. Output the table of minimum, maximum and average to the Debug sidebar.
+1. On a press edge, record the start time.
+2. On a release edge, calculate `duration = release − start`.
+3. If the duration is 500 ms or more, toggle the blinking mode.
+4. Else, if the duration is at least 30 ms and blinking mode is off, toggle LD2.
+5. If blinking mode is on, toggle LD2 every 200 ms.
+6. Repeat continuously.
 
 **Code Base:**
 
-- Import the flow in Node-RED (**Menu → Import**), replace `<ESP8266_IP>` in the HTTP Request node with the IP address printed on the PC terminal, and **Deploy**.
-- Nodes: Inject (every 5 s) → HTTP Request (GET, parsed JSON object) → Function (min / max / average in `context`) → Debug.
+- `blink` holds the blinking mode, `press_t` the press start time and `blink_t` the last blink toggle time.
+- Unsigned subtraction `now - press_t` gives the correct duration even when the tick counter wraps around.
 
 ### 3. Inference
 
-Node-RED polls the STM32 HTTP server and builds the minimum, maximum and average of the BME280 readings over time. Serving the data as JSON lets a standard HTTP client consume it directly, so analytics can be added on the PC without changing the firmware.
+The STM32 distinguishes short and long presses of B1: a short press toggles LD2 and a long press starts or stops blinking. Measuring the press with time stamps keeps the loop running, so the LED blinks and the button is read at the same time.

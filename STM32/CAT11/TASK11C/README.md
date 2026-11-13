@@ -1,16 +1,17 @@
-# TASK 11C Short-Press and Long-Press Detection
+# TASK 11C Node-RED as a Second HTTP Client of STM32/ESP8266 HTTP Server
 
-**Experiment:** [CONTINUOUS ASSESSMENT 11 – STM32F401RE Cortex-M4: GPIO and User Input Programming](../README.md)
+**Experiment:** [CONTINUOUS ASSESSMENT 11 – HTTP Server - STM32–Wemos Wi-Fi Modem Using AT Commands](../README.md)
 
 ---
 
 ### 1. Hardware Used
 
-- **Development Board:** NUCLEO-F401RE
-- **Microcontroller IC:** STM32F401RET6
-- **GPIO Pins:** PA5 (LED output), PC13 (button input, pull-up)
-- **Peripherals:** Onboard LED LD2, onboard user button B1
-- **Power Supply:** 5 V over the ST-LINK USB connector
+- **Development Board:** STM32 Blue Pill
+- **Microcontroller IC:** STM32F103C8T6 (ARM Cortex-M3, 72 MHz)
+- **UART1 Pins (Wemos):** PA9 (USART1_TX) → Wemos RX, PA10 (USART1_RX) ← Wemos TX
+- **UART2 Pins (PC):** PA2 (USART2_TX) → converter RX, PA3 (USART2_RX) ← converter TX
+- **Peripherals:** Wemos D1 Mini (ESP8266) running AT firmware, USB-to-TTL (3.3 V) converter to PuTTY, PC running Node-RED on the same Wi-Fi network
+- **Power Supply:** Wemos powered from 5 V; STM32, Wemos and converter share a common GND
 
 Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
@@ -18,28 +19,22 @@ Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
 
 **Working Principle:**
 
-The duration of each press is measured with `HAL_GetTick()` time stamps, without blocking delays, and the STM32 performs a different action for each type of press:
-
-| Press duration | Type | Action |
-|---|---|---|
-| < 30 ms | Bounce | Ignored |
-| 30 ms – 499 ms | Short press | Toggle LD2 (when not blinking) |
-| ≥ 500 ms | Long press | Turn blinking mode ON / OFF |
+The firmware of Task 11B is used, so the STM32 serves the static page on port 80. Node-RED acts as a second HTTP client: an Inject node triggers the request, the HTTP Request node uses `http://<ESP8266_IP>/`, and the Debug node displays the HTTP response received from the STM32.
 
 **Pseudocode:**
 
-1. On a press edge, record the start time.
-2. On a release edge, calculate `duration = release − start`.
-3. If the duration is 500 ms or more, toggle the blinking mode.
-4. Else, if the duration is at least 30 ms and blinking mode is off, toggle LD2.
-5. If blinking mode is on, toggle LD2 every 200 ms.
-6. Repeat continuously.
+1. Run the Task 11B firmware on the STM32.
+2. Click the Inject node to trigger a request.
+3. The HTTP Request node sends `GET /` to the ESP8266 IP address.
+4. The STM32 answers with the static HTML response.
+5. The Debug node shows the response.
 
 **Code Base:**
 
-- `blink` holds the blinking mode, `press_t` the press start time and `blink_t` the last blink toggle time.
-- Unsigned subtraction `now - press_t` gives the correct duration even when the tick counter wraps around.
+- STM32 firmware: same as Task 11B.
+- Node-RED flow: [`node-red-flow.json`](node-red-flow.json) – Inject → HTTP Request (`GET http://<ESP8266_IP>/`) → Debug.
+- Import the flow in Node-RED (**Menu → Import**), replace `<ESP8266_IP>` with the IP address printed on the PC terminal, and **Deploy**.
 
 ### 3. Inference
 
-The STM32 distinguishes short and long presses of B1: a short press toggles LD2 and a long press starts or stops blinking. Measuring the press with time stamps keeps the loop running, so the LED blinks and the button is read at the same time.
+Node-RED receives the same HTTP response as the browser, showing that the STM32/ESP8266 node behaves as a standard HTTP server that any HTTP client can query.

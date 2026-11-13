@@ -13,7 +13,7 @@
 #include "stdint.h"
 #include "string.h"
 #include "stdbool.h"
-#include "stm32f1xx_hal.h"
+#include "stm32f4xx_hal.h"
 
 
 #define BUFFERSIZE 100
