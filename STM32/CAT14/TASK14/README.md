@@ -15,7 +15,7 @@
 - **Network:** Wi-Fi access point → MQTT broker `broker.emqx.io`, TCP port 1883
 - **Power Supply:** Wemos powered from 5 V, common GND
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

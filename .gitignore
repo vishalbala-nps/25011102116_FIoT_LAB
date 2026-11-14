@@ -61,3 +61,5 @@ RemoteSystemsTempFiles/
 *docx
 evaluate.py
 __pycache__
+*zip
+evaluation_report.md

@@ -13,7 +13,7 @@
 - **Peripherals:** Bosch BME280 module (temperature, pressure, humidity), I²C address 0x76 (SDO to GND); USB-to-TTL converter to PuTTY (115200-8-N-1)
 - **Power Supply:** BME280 powered from the Nucleo 3.3 V pin, common GND
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

@@ -12,7 +12,7 @@
 - **Peripherals:** Onboard LED (active-low), push-button to GND
 - **Power Supply:** 3.3 V from the board
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

@@ -12,7 +12,7 @@
 - **LEDs:** 4 external LEDs on P1.1, P1.3, P1.5, P1.7 (active-high, cathode to GND)
 - **Power Supply:** 5V DC
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

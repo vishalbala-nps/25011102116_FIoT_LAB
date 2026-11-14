@@ -13,7 +13,7 @@
 - **Peripherals:** Onboard LED on PC13 (active-low), USB-to-TTL converter to PuTTY
 - **Power Supply:** 3.3 V from the board
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

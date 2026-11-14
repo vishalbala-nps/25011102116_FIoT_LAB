@@ -12,7 +12,7 @@
 - **Peripherals:** Onboard LED on PC13 (active-low), push-button between PA15 and GND
 - **Power Supply:** 3.3 V from the board; push-button returns to GND
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

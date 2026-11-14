@@ -18,7 +18,7 @@
 | USART1 | STM32 ↔ Wemos | AT commands and responses |
 | USART2 | STM32 ↔ PC | Debug / display |
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

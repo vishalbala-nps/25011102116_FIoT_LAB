@@ -12,7 +12,7 @@
 - **Peripherals:** Wemos D1 Mini (ESP8266), USB-to-TTL converter
 - **Power Supply:** 5 V to the Wemos, common GND
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

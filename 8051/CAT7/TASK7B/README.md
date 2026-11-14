@@ -11,7 +11,7 @@
 - **Peripheral:** Built-in 16×2 character LCD (HD44780-compatible)
 - **Power Supply:** 5V DC
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

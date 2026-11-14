@@ -12,7 +12,7 @@
 - **Peripherals:** Built-in 16×2 character LCD, built-in 4×4 matrix keypad
 - **Power Supply:** 5V DC
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

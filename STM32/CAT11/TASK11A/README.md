@@ -13,7 +13,7 @@
 - **Peripherals:** Wemos D1 Mini (ESP8266) running AT firmware, USB-to-TTL (3.3 V) converter to PuTTY, Wi-Fi access point
 - **Power Supply:** Wemos powered from 5 V; STM32, Wemos and converter share a common GND
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

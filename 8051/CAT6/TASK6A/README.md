@@ -11,7 +11,7 @@
 - **Peripheral:** USB-to-TTL serial converter connected to the PC running PuTTY (9600-8-N-1)
 - **Power Supply:** 5V DC; converter GND connected to board GND
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

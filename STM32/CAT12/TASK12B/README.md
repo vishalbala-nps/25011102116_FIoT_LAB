@@ -12,7 +12,7 @@
 - **Peripherals:** Onboard LED LD2 (active-high), onboard blue user button B1 (active-low)
 - **Power Supply:** 5 V over the ST-LINK USB connector
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

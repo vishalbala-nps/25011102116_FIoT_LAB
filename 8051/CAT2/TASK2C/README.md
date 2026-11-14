@@ -12,7 +12,7 @@
 - **Peripheral:** Built-in user LED (active-low)
 - **Power Supply:** 5V DC
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 

@@ -12,7 +12,7 @@
 - **Peripherals:** USB-to-TTL (3.3 V) serial converter connected to the PC running PuTTY
 - **Power Supply:** 3.3 V from the board; converter GND connected to board GND
 
-Circuit diagram: see the [experiment README](../README.md#circuit-diagram).
+![Circuit Diagram](../circuit.png)
 
 ### 2. Core Logic / Pseudocode / Code Base
 
