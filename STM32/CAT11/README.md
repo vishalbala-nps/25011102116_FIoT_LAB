@@ -2,7 +2,7 @@
 
 **EXP:** CONTINUOUS ASSESSMENT 11
 
-**DATE:** DD/MM/YYYY
+**DATE:** 19/10/2026
 
 **NAME OF EXP:** HTTP Server - STM32–Wemos Wi-Fi Modem Using AT Commands
 

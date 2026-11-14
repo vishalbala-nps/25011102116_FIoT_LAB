@@ -2,7 +2,7 @@
 
 **EXP:** CONTINUOUS ASSESSMENT 12
 
-**DATE:** DD/MM/YYYY
+**DATE:** 26/10/2026
 
 **NAME OF EXP:** STM32F401RE Cortex-M4: GPIO and User Input Programming
 

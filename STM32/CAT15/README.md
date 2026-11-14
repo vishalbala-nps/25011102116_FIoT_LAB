@@ -28,6 +28,10 @@ An IoT node that monitors the environment of a server rack. The STM32 reads the 
 
 ![Circuit Diagram](circuit.png)
 
+## Node-Red Dashboard
+
+![Node-Red Dashboard](dashboard.png)
+
 ## Tasks
 
 | Task | What it does | Outcome |
